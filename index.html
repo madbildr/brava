@@ -1,69 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="module">
+
+        // Import the functions you need from the SDKs you need
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+        // Your web app's Firebase configuration
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyDVdJa5lG7kVC5U4WwjDpidaLfvB1wSpX4",
+
+            authDomain: "brava-696d1.firebaseapp.com",
+
+            databaseURL: "https://brava-696d1-default-rtdb.firebaseio.com",
+
+            projectId: "brava-696d1",
+
+            storageBucket: "brava-696d1.firebasestorage.app",
+
+            messagingSenderId: "473853706648",
+
+            appId: "1:473853706648:web:aa8de761b5640531dcebed",
+
+            measurementId: "G-MVXZXRS1JH"
+
+        };
+
+
+        // Initialize Firebase
+
+        const app = initializeApp(firebaseConfig);
+
+        const analytics = getAnalytics(app);
+
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brava Beer Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .form-container input,
+            .form-container select,
+            .form-container textarea {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .form-container button {
+                width: 100%;
+                padding: 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+
+                .form-container button:hover {
+                    background-color: #45a049;
+                }
+    </style>
 </head>
 <body>
     <h1>Brava Beer Tracker</h1>
-    <form id="beerForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+    <div class="form-container">
+        <h2>Submit your Beer Review</h2>
+        <form id="beerForm">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
 
-        <label for="beerBrand">Beer Brand:</label>
-        <input type="text" id="beerBrand" name="beerBrand" required><br><br>
+            <label for="beerBrand">Beer Brand</label>
+            <input type="text" id="beerBrand" name="beerBrand" required placeholder="Enter beer brand">
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" required><br><br>
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" required placeholder="Enter location">
 
-        <label for="rating">Rating (1-5):</label>
-        <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
+            <label for="rating">Rating (1-5)</label>
+            <select id="rating" name="rating" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
 
-        <label for="comments">Comments:</label>
-        <textarea id="comments" name="comments"></textarea><br><br>
+            <label for="comments">Comments</label>
+            <textarea id="comments" name="comments" rows="4" placeholder="Share your thoughts on the beer"></textarea>
 
-        <button type="submit">Submit</button>
-    </form>
-
-    <p id="statusMessage"></p>
+            <button type="button" onclick="submitForm()">Submit Review</button>
+        </form>
+    </div>
 
     <script>
-        const form = document.getElementById('beerForm');
-        const statusMessage = document.getElementById('statusMessage');
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwVykDHYFu8Vr5BQkkWfka_7QEZVwj-5Ecd6BPPHMj4SNmQ3TKvMDKBFa-_lWHyVHrV/exec";
+        function submitForm() {
+            // Get the form data
+            var name = document.getElementById("name").value;
+            var beerBrand = document.getElementById("beerBrand").value;
+            var location = document.getElementById("location").value;
+            var rating = document.getElementById("rating").value;
+            var comments = document.getElementById("comments").value;
 
-        form.addEventListener('submit', async (event) => {
-            event.preventDefault();
-            statusMessage.textContent = "Submitting your data...";
-
-            const formData = {
-                name: document.getElementById('name').value,
-                beerBrand: document.getElementById('beerBrand').value,
-                location: document.getElementById('location').value,
-                rating: document.getElementById('rating').value,
-                comments: document.getElementById('comments').value
+            // Prepare the data to be sent
+            var data = {
+                "name": name,
+                "beerBrand": beerBrand,
+                "location": location,
+                "rating": rating,
+                "comments": comments
             };
 
-            try {
-                const response = await fetch(scriptURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
+            // Send the POST request
+            fetch("https://script.google.com/macros/s/AKfycbwVykDHYFu8Vr5BQkkWfka_7QEZVwj-5Ecd6BPPHMj4SNmQ3TKvMDKBFa-_lWHyVHrV/exec", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())  // Parse JSON response
+                .then(data => {
+                    console.log("Success:", data);
+                    alert("Review submitted successfully!");
+                    // Optionally, clear the form after submission
+                    document.getElementById("beerForm").reset();
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Submission failed. Please try again.");
                 });
-
-                if (response.ok) {
-                    statusMessage.textContent = "Data submitted successfully!";
-                    form.reset();
-                } else {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
-            } catch (error) {
-                statusMessage.textContent = `Submission failed: ${error.message}`;
-            }
-        });
+        }
     </script>
 </body>
 </html>
