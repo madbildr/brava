@@ -3,82 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beer Tracker</title>
+    <title>Brava Beer Rating</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 0;
-            text-align: center;
+            background-color: #fff;
             color: #333;
+            padding: 20px;
+            margin: 0;
         }
 
         h1 {
-            color: #f4a261; /* Golden color for heading */
-            font-size: 2.5em;
-            margin-top: 20px;
+            text-align: center;
+            color: #d4af37; /* Golden color for the heading */
         }
 
         form {
-            background-color: #f8f8f8;
+            max-width: 600px;
+            margin: 0 auto;
             padding: 20px;
-            margin: 20px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 500px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            font-weight: bold;
+            margin-top: 10px;
             display: block;
         }
 
-        input[type="text"],
-        input[type="number"],
-        textarea {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
-            margin-bottom: 20px;
+            margin-top: 5px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        input[type="number"] {
-            width: 50%;
+            border-radius: 4px;
         }
 
         button {
-            background-color: #f4a261; /* Golden color for button */
+            width: 100%;
+            padding: 12px;
+            background-color: #d4af37; /* Golden color for the button */
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 1.2em;
-            border-radius: 5px;
+            border-radius: 4px;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
             button:hover {
-                background-color: #e07b40; /* Darker golden shade on hover */
+                background-color: #b88b2f; /* Slightly darker golden for hover effect */
             }
 
-            button:focus {
-                outline: none;
-            }
-
-        textarea {
-            resize: vertical;
+        .error-message {
+            color: red;
+            text-align: center;
         }
     </style>
+</head>
+<body>
+
+    <h1>Brava Beer Rating</h1>
+
+    <form id="beerForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="beerBrand">Beer Brand:</label>
+        <input type="text" id="beerBrand" required>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" required>
+
+        <label for="rating">Rating (1-5):</label>
+        <select id="rating" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <label for="comments">Comments:</label>
+        <textarea id="comments" rows="4" required></textarea>
+
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <div id="errorMessage" class="error-message"></div>
+
     <script type="module">
-        // Firebase code remains unchanged
+        // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
             authDomain: "brava-8d79e.firebaseapp.com",
@@ -89,18 +110,25 @@
             measurementId: "G-45LV2F2Z7D"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Form submission handler
         async function submitForm(event) {
             event.preventDefault();
+
             const name = document.getElementById("name").value;
             const beerBrand = document.getElementById("beerBrand").value;
             const location = document.getElementById("location").value;
             const rating = document.getElementById("rating").value;
             const comments = document.getElementById("comments").value;
 
+            // Error message container
+            const errorMessage = document.getElementById("errorMessage");
+
             try {
+                // Add the data to Firestore
                 await addDoc(collection(db, "beers"), {
                     name,
                     beerBrand,
@@ -109,33 +137,23 @@
                     comments,
                     timestamp: new Date()
                 });
+
                 alert("Submission successful!");
+
+                // Reset form
                 document.getElementById("beerForm").reset();
+
+                // Clear any previous error messages
+                errorMessage.textContent = "";
             } catch (error) {
-                alert("Error submitting data: " + error);
+                console.error("Error submitting data: ", error);
+                errorMessage.textContent = "Error submitting data: " + error.message;
             }
         }
+
+        // Event listener for form submission
+        document.getElementById("beerForm").addEventListener("submit", submitForm);
     </script>
-</head>
-<body>
-    <h1>Submit Your Beer Review</h1>
-    <form id="beerForm" onsubmit="submitForm(event)">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" required><br>
 
-        <label for="beerBrand">Beer Brand:</label><br>
-        <input type="text" id="beerBrand" required><br>
-
-        <label for="location">Location:</label><br>
-        <input type="text" id="location" required><br>
-
-        <label for="rating">Rating (1-5):</label><br>
-        <input type="number" id="rating" min="1" max="5" required><br>
-
-        <label for="comments">Comments:</label><br>
-        <textarea id="comments" required></textarea><br>
-
-        <button type="submit">Submit</button>
-    </form>
 </body>
 </html>
