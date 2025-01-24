@@ -3,156 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brava Beer Rating</title>
+    <title>Brava Home</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #fff;
-            color: #333;
-            padding: 20px;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
         }
 
-        h1 {
-            text-align: center;
-            color: #d4af37; /* Golden color for the heading */
-        }
-
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
+        .logo {
+            font-size: 48px;
             font-weight: bold;
-            margin-top: 10px;
-            display: block;
+            color: #d4af37; /* Golden color */
+            margin: 20px 0 30px;
+            text-align: center;
         }
 
-        input, select, textarea {
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px; /* Gap between buttons */
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            max-width: 400px; /* Limits container width for better layout on larger screens */
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #d4af37; /* Golden color for the button */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
+        .option {
+            flex: 1 1 calc(50% - 15px); /* Equal size for two buttons, adjusts to available space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             cursor: pointer;
+            padding: 20px;
+            border: 2px solid #d4af37; /* Golden outline */
+            border-radius: 15px; /* Rounded corners */
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+            background-color: #fff; /* Ensures consistent white background */
         }
 
-            button:hover {
-                background-color: #b88b2f; /* Slightly darker golden for hover effect */
+            .option img {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 10px;
             }
 
-        .error-message {
-            color: red;
-            text-align: center;
+            .option span {
+                font-size: 18px;
+                font-weight: bold;
+                color: #555;
+            }
+
+            .option:hover {
+                background-color: #fdf6e3; /* Light golden highlight */
+                transform: scale(1.05); /* Slight zoom on hover */
+            }
+
+                .option:hover span {
+                    color: #d4af37; /* Highlight text on hover */
+                }
+
+        @media (max-width: 600px) {
+            .option {
+                flex: 1 1 100%; /* Stacks buttons on smaller screens */
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Brava Beer Rating</h1>
+    <div class="logo">Brava 🍺</div>
 
-    <form id="beerForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
+    <div class="container">
+        <!-- Left option -->
+        <div class="option" onclick="navigateTo('have-a-pint')">
+            <img src="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png" alt="Have a Pint">
+            <span>Have a Pint</span>
+        </div>
 
-        <label for="beerBrand">Beer Brand:</label>
-        <input type="text" id="beerBrand" required>
+        <!-- Right option -->
+        <div class="option" onclick="navigateTo('stats-insights')">
+            <img src="https://em-content.zobj.net/thumbs/120/apple/354/bar-chart_1f4ca.png" alt="Stats & Insights">
+            <span>Stats & Insights</span>
+        </div>
+    </div>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" required>
-
-        <label for="rating">Rating (1-5):</label>
-        <select id="rating" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-
-        <label for="comments">Comments:</label>
-        <textarea id="comments" rows="4" required></textarea>
-
-        <button type="submit">Submit Review</button>
-    </form>
-
-    <div id="errorMessage" class="error-message"></div>
-
-    <script type="module">
-        // Import Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
-            authDomain: "brava-8d79e.firebaseapp.com",
-            projectId: "brava-8d79e",
-            storageBucket: "brava-8d79e.firebasestorage.app",
-            messagingSenderId: "1046018244812",
-            appId: "1:1046018244812:web:3b6de346e4face1bf5c269",
-            measurementId: "G-45LV2F2Z7D"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Form submission handler
-        async function submitForm(event) {
-            event.preventDefault();
-
-            const name = document.getElementById("name").value;
-            const beerBrand = document.getElementById("beerBrand").value;
-            const location = document.getElementById("location").value;
-            const rating = document.getElementById("rating").value;
-            const comments = document.getElementById("comments").value;
-
-            // Error message container
-            const errorMessage = document.getElementById("errorMessage");
-
-            try {
-                // Add the data to Firestore
-                await addDoc(collection(db, "beers"), {
-                    name,
-                    beerBrand,
-                    location,
-                    rating,
-                    comments,
-                    timestamp: new Date()
-                });
-
-                alert("Submission successful!");
-
-                // Reset form
-                document.getElementById("beerForm").reset();
-
-                // Clear any previous error messages
-                errorMessage.textContent = "";
-            } catch (error) {
-                console.error("Error submitting data: ", error);
-                errorMessage.textContent = "Error submitting data: " + error.message;
+    <script>
+        // Simple navigation handler
+        function navigateTo(page) {
+            if (page === "have-a-pint") {
+                window.location.href = "beer-form.html"; // Link to your beer submission page
+            } else if (page === "stats-insights") {
+                window.location.href = "stats.html"; // Link to your stats page
             }
         }
-
-        // Event listener for form submission
-        document.getElementById("beerForm").addEventListener("submit", submitForm);
     </script>
 
 </body>
