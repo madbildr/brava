@@ -33,13 +33,16 @@ function updateStep() {
 // Move to the next step
 function nextStep() {
     saveCurrentStep();
+    console.log("Moving to next step:", currentStep);
     if (currentStep < steps.length - 1) {
         currentStep++;
         updateStep();
     } else {
+        console.log("Submitting form with data:", formData);
         submitForm(formData);
     }
 }
+
 
 // Submit form to Firestore
 async function submitForm(data) {
