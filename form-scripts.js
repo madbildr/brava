@@ -43,11 +43,13 @@ function nextStep() {
 
 // Submit form to Firestore
 async function submitForm(data) {
+    console.log("Form data ready to submit:", data);  // Log data to console
     try {
         await addDoc(collection(db, "beers"), {
             ...data,
             timestamp: Timestamp.now(),
         });
+        console.log("Document written successfully!");  // Log success
         alert("Submitted successfully!");
         location.reload();
     } catch (error) {
@@ -55,6 +57,7 @@ async function submitForm(data) {
         alert("Submission failed!");
     }
 }
+
 
 // Initialize Google Maps
 function initMap() {
