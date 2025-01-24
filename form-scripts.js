@@ -113,31 +113,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle submit button click
     submitButton.addEventListener("click", () => {
-        const inputs = steps[currentStepIndex].querySelectorAll("input, textarea");
-        let valid = true;
+        // Save the last step's data before submitting
+        saveCurrentStep();
 
-        // Input validation
-        inputs.forEach((input) => {
-            if (input.value.trim() === "") {
-                input.classList.add("error");
-                valid = false;
-            } else {
-                input.classList.remove("error");
-            }
+        // Gather form data from all steps
+        const allData = {};
+        steps.forEach((step) => {
+            const inputs = step.querySelectorAll("input, textarea");
+            inputs.forEach((input) => {
+                if (input.name) {
+                    allData[input.name] = input.value;
+                }
+            });
         });
 
-        if (!valid) return;
-
-        // Gather form data
-        const formData = {};
-        inputs.forEach(input => {
-            formData[input.name] = input.value;
-        });
-
-        console.log("Form data:", formData);  // Log the data
+        // Log the complete form data to console (for testing)
+        console.log("Form data:", allData);
 
         // Submit to Firestore
-        submitForm(formData);
+        submitForm(allData);
     });
 
     // Initialize step display
