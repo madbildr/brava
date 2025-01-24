@@ -2,21 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebas
 import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
 const firebaseConfig = {
-
     apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
-
     authDomain: "brava-8d79e.firebaseapp.com",
-
     projectId: "brava-8d79e",
-
     storageBucket: "brava-8d79e.firebasestorage.app",
-
     messagingSenderId: "1046018244812",
-
     appId: "1:1046018244812:web:3b6de346e4face1bf5c269",
-
     measurementId: "G-45LV2F2Z7D"
-
 };
 
 const app = initializeApp(firebaseConfig);
@@ -36,16 +28,6 @@ function updateStep() {
     steps[currentStep].classList.add('active');
 }
 
-function nextStep() {
-    saveCurrentStep();
-    if (currentStep < steps.length - 1) {
-        currentStep++;
-        updateStep();
-    } else {
-        submitForm(formData);
-    }
-}
-
 async function submitForm(data) {
     try {
         await addDoc(collection(db, "beers"), {
@@ -60,33 +42,27 @@ async function submitForm(data) {
     }
 }
 
-document.getElementById("next1").addEventListener("click", nextStep);
-// Add similar event listeners for other buttons.
-
-function initMap() {
-    const map = new google.maps.Map(document.getElementById("map"), { center: { lat: 0, lng: 0 }, zoom: 3 });
-    const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
-    autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        map.setCenter(place.geometry.location);
-    });
+function nextStep() {
+    saveCurrentStep();
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateStep();
+    } else {
+        submitForm(formData);
+    }
 }
-window.initMap = initMap;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const steps = document.querySelectorAll(".step");
     const nextButtons = document.querySelectorAll(".next-btn");
     let currentStepIndex = 0;
 
-    function updateStepDisplay() {
-        steps.forEach((step, index) => {
-            step.classList.toggle("active", index === currentStepIndex);
-        });
-    }
+    // Initialize step display
+    updateStep();
 
-    nextButtons.forEach((button, index) => {
+    // Event listeners for the "Next" buttons
+    nextButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            // Prevent moving forward if the current step is invalid
+            // Validate inputs in the current step
             const inputs = steps[currentStepIndex].querySelectorAll("input, textarea");
             let valid = true;
 
@@ -101,15 +77,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!valid) return;
 
-            // Move to the next step
+            // Save data for current step
+            saveCurrentStep();
+
+            // Move to next step if valid
             if (currentStepIndex < steps.length - 1) {
                 currentStepIndex++;
-                updateStepDisplay();
+                updateStep();
+            } else {
+                // If it's the last step, submit the form
+                submitForm(formData);
             }
         });
     });
 
-    // Initialize step display
-    updateStepDisplay();
+    // Function to update which step is visible
+    function updateStep() {
+        steps.forEach((step, index) => {
+            step.classList.toggle("active", index === currentStepIndex);
+        });
+    }
 });
-
