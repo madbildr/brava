@@ -1,109 +1,169 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brava Beer Rating</title>
+    <title>Have a Pint</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #333;
-            padding: 20px;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f8f8;
         }
 
-        h1 {
-            text-align: center;
-            color: #d4af37; /* Golden color for the heading */
-        }
-
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
-        }
-
-        input, select, textarea {
+        #form-container {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
         }
+
+        .step {
+            display: none;
+        }
+
+            .step.active {
+                display: block;
+            }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background-color: #d4af37; /* Golden color for the button */
+            background-color: gold;
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
         }
 
             button:hover {
-                background-color: #b88b2f; /* Slightly darker golden for hover effect */
+                background-color: darkgoldenrod;
             }
 
-        .error-message {
-            color: red;
-            text-align: center;
-        }
+            button:disabled {
+                background-color: lightgray;
+                cursor: not-allowed;
+            }
     </style>
 </head>
 <body>
+    <div id="form-container">
+        <h1>Have a Pint</h1>
+        <div id="step-forms">
+            <div class="step active">
+                <label for="name">What's your name?</label>
+                <input type="text" id="name" name="name">
+                <button type="button" id="next1">Next</button>
+            </div>
+            <div class="step">
+                <label for="beerBrand">What brand of beer was it?</label>
+                <input type="text" id="beerBrand" name="beerBrand">
+                <button type="button" id="next2">Next</button>
+            </div>
+            <div class="step">
+                <label for="location">Where did you have it?</label>
+                <input type="text" id="location" name="location">
+                <button type="button" id="next3">Next</button>
+            </div>
+            <div class="step">
+                <label for="rating">How would you rate it?</label>
+                <div id="star-rating-container">
+                    <input class="rating"
+                           type="range"
+                           id="rating"
+                           name="rating"
+                           max="5"
+                           step="0.5"
+                           value="2.5"
+                           oninput="this.style.setProperty('--value', `${this.valueAsNumber}`)"
+                           style="--value:2.5; --fill: gold; --starsize: 3rem;">
+                </div>
+                <button type="button" id="next4">Next</button>
+            </div>
 
-    <h1>Brava Beer Rating</h1>
+            <style>
+                #star-rating-container {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                }
 
-    <form id="beerForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
+                .rating {
+                    --stars: 5;
+                    --value: 1;
+                    --fill: gold;
+                    --fillbg: rgba(100, 100, 100, 0.15);
+                    --starsize: 3rem;
+                    --w: calc(var(--stars) * var(--starsize));
+                    position: relative;
+                    -webkit-appearance: none;
+                    display: block;
+                    width: var(--w);
+                    height: var(--starsize);
+                    background: linear-gradient( to right, var(--fill) 0%, var(--fill) calc(var(--value) / var(--stars) * 100%), var(--fillbg) calc(var(--value) / var(--stars) * 100%), var(--fillbg) 100% );
+                    border-radius: var(--starsize);
+                }
 
-        <label for="beerBrand">Beer Brand:</label>
-        <input type="text" id="beerBrand" required>
+                /* Star icon for background */
+                .rating {
+                    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
+                    background-repeat: repeat-x;
+                    background-size: calc(var(--starsize) * 1) calc(var(--starsize) * 1);
+                    background-position: left center;
+                }
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" required>
+                    /* Remove thumb visibility */
+                    .rating::-moz-range-thumb, .rating::-webkit-slider-thumb {
+                        background-color: transparent;
+                        width: 0;
+                        height: 0;
+                        opacity: 0;
+                    }
+            </style>
 
-        <label for="rating">Rating (1-5):</label>
-        <select id="rating" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
+            <script>
+                document.getElementById('rating').addEventListener('input', function () {
+                    const ratingValue = this.valueAsNumber;
+                    this.style.setProperty('--value', `${ratingValue}`);
+                    this.style.setProperty('--x', `${(ratingValue / 5) * 100}%`);
+                });
 
-        <label for="comments">Comments:</label>
-        <textarea id="comments" rows="4" required></textarea>
+                document.getElementById('next4').addEventListener('click', function () {
+                    const ratingValue = document.getElementById('rating').valueAsNumber;
+                    alert(`Rating submitted: ${ratingValue}`);
+                });
+            </script>
 
-        <button type="submit">Submit Review</button>
-    </form>
 
-    <div id="errorMessage" class="error-message"></div>
 
-    <script type="module">// Import Firebase SDK
+            <div class="step">
+                <label for="comments">Any additional comments?</label>
+                <textarea id="comments" name="comments"></textarea>
+                <button type="button" id="submit-button">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Config -->
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
             authDomain: "brava-8d79e.firebaseapp.com",
             projectId: "brava-8d79e",
-            storageBucket: "brava-8d79e.firebasestorage.app",
+            storageBucket: "brava-8d79e.appspot.com",
             messagingSenderId: "1046018244812",
             appId: "1:1046018244812:web:3b6de346e4face1bf5c269",
             measurementId: "G-45LV2F2Z7D"
@@ -113,45 +173,66 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Form submission handler
-        async function submitForm(event) {
-            event.preventDefault();
+        // Form data handling
+        const steps = document.querySelectorAll('.step');
+        let currentStep = 0;
+        const formData = {};
 
-            const name = document.getElementById("name").value;
-            const beerBrand = document.getElementById("beerBrand").value;
-            const location = document.getElementById("location").value;
-            const rating = document.getElementById("rating").value;
-            const comments = document.getElementById("comments").value;
+        function saveCurrentStep() {
+            const inputs = steps[currentStep].querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+        }
 
-            // Error message container
-            const errorMessage = document.getElementById("errorMessage");
+        function updateStep() {
+            steps.forEach(step => step.classList.remove('active'));
+            steps[currentStep].classList.add('active');
+        }
 
-            try {
-                // Add the data to Firestore
-                await addDoc(collection(db, "beers"), {
-                    name,
-                    beerBrand,
-                    location,
-                    rating,
-                    comments,
-                    timestamp: new Date()
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                saveCurrentStep();
+                currentStep++;
+                updateStep();
+            } else {
+                saveCurrentStep();
+                console.log('Form data ready for submission:', formData);
+                submitForm(formData).then(() => {
+                    alert('Your data has been submitted!');
+                    location.reload(); // Reset form after submission
+                }).catch((error) => {
+                    alert('Failed to submit data. Check the console for errors.');
+                    console.error(error);
                 });
-
-                alert("Submission successful!");
-
-                // Reset form
-                document.getElementById("beerForm").reset();
-
-                // Clear any previous error messages
-                errorMessage.textContent = "";
-            } catch (error) {
-                console.error("Error submitting data: ", error);
-                errorMessage.textContent = "Error submitting data: " + error.message;
             }
         }
 
-        // Event listener for form submission
-        document.getElementById("beerForm").addEventListener("submit", submitForm);</script>
+        async function submitForm(data) {
+            try {
+                // Add timestamp to the data
+                const dataWithTimestamp = {
+                    ...data,
+                    timestamp: Timestamp.now() // Adds current timestamp
+                };
+
+                // Submit the data to the 'beers' collection
+                const docRef = await addDoc(collection(db, "beers"), dataWithTimestamp);
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                throw e;
+            }
+        }
+
+        // Attach event listeners to buttons
+        document.getElementById("next1").addEventListener("click", nextStep);
+        document.getElementById("next2").addEventListener("click", nextStep);
+        document.getElementById("next3").addEventListener("click", nextStep);
+        document.getElementById("next4").addEventListener("click", nextStep);
+        document.getElementById("submit-button").addEventListener("click", nextStep);
+    </script>
+    
 
 </body>
 </html>
