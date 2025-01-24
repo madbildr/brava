@@ -33,26 +33,21 @@ function updateStep() {
 // Move to the next step
 function nextStep() {
     saveCurrentStep();
-    console.log("Moving to next step:", currentStep);
     if (currentStep < steps.length - 1) {
         currentStep++;
         updateStep();
     } else {
-        console.log("Submitting form with data:", formData);
         submitForm(formData);
     }
 }
 
-
 // Submit form to Firestore
 async function submitForm(data) {
-    console.log("Form data ready to submit:", data);  // Log data to console
     try {
         await addDoc(collection(db, "beers"), {
             ...data,
             timestamp: Timestamp.now(),
         });
-        console.log("Document written successfully!");  // Log success
         alert("Submitted successfully!");
         location.reload();
     } catch (error) {
@@ -60,7 +55,6 @@ async function submitForm(data) {
         alert("Submission failed!");
     }
 }
-
 
 // Initialize Google Maps
 function initMap() {
@@ -80,8 +74,8 @@ function initMap() {
 window.initMap = initMap;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const steps = document.querySelectorAll(".step");
     const nextButtons = document.querySelectorAll(".next-btn");
+    const submitButton = document.getElementById("submit-button");
     let currentStepIndex = 0;
 
     // Update step display
@@ -92,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Handle next button click
-    nextButtons.forEach((button, index) => {
+    nextButtons.forEach((button) => {
         button.addEventListener("click", () => {
             const inputs = steps[currentStepIndex].querySelectorAll("input, textarea");
             let valid = true;
@@ -115,6 +109,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 updateStepDisplay();
             }
         });
+    });
+
+    // Handle submit button click
+    submitButton.addEventListener("click", () => {
+        const inputs = steps[currentStepIndex].querySelectorAll("input, textarea");
+        let valid = true;
+
+        // Input validation
+        inputs.forEach((input) => {
+            if (input.value.trim() === "") {
+                input.classList.add("error");
+                valid = false;
+            } else {
+                input.classList.remove("error");
+            }
+        });
+
+        if (!valid) return;
+
+        // Gather form data
+        const formData = {};
+        inputs.forEach(input => {
+            formData[input.name] = input.value;
+        });
+
+        console.log("Form data:", formData);  // Log the data
+
+        // Submit to Firestore
+        submitForm(formData);
     });
 
     // Initialize step display
