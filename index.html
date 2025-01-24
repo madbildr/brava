@@ -3,107 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track your beer adventures with Brava. Rate your pints, explore stats, and enjoy your beer journey.">
+    <meta name="author" content="Brava Team">
+    <meta property="og:title" content="Brava 🍺 - Your Beer Adventure Companion">
+    <meta property="og:description" content="Track, rate, and get insights into your beer journey with Brava.">
+    <meta property="og:image" content="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png">
+    <meta property="og:url" content="https://yourbravaapp.com">
     <title>Brava Home</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #333;
-            margin-top: 40px; /* Shift content upward */
-        }
-
-        .logo {
-            font-size: 48px;
-            font-weight: bold;
-            color: #d4af37; /* Golden color */
-            margin: 10px 0 20px; /* Less space below the logo */
-            text-align: center;
-        }
-
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px; /* Gap between buttons */
-            width: 100%;
-            max-width: 400px; /* Limits container width for better layout on larger screens */
-        }
-
-        .option {
-            flex: 1 1 calc(50% - 15px); /* Equal size for two buttons, adjusts to available space */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            padding: 20px;
-            border: 2px solid #d4af37; /* Golden outline */
-            border-radius: 15px; /* Rounded corners */
-            transition: background-color 0.3s, color 0.3s, transform 0.2s;
-            background-color: #fff; /* Ensures consistent white background */
-        }
-
-            .option img {
-                width: 60px;
-                height: 60px;
-                margin-bottom: 10px;
-            }
-
-            .option span {
-                font-size: 18px;
-                font-weight: bold;
-                color: #555;
-            }
-
-            .option:hover {
-                background-color: #fdf6e3; /* Light golden highlight */
-                transform: scale(1.05); /* Slight zoom on hover */
-            }
-
-                .option:hover span {
-                    color: #d4af37; /* Highlight text on hover */
-                }
-
-        @media (max-width: 600px) {
-            .option {
-                flex: 1 1 100%; /* Stacks buttons on smaller screens */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png">
 </head>
 <body>
-
     <div class="logo">Brava 🍺</div>
-
     <div class="container">
-        <!-- Left option -->
-        <div class="option" onclick="navigateTo('have-a-pint')">
+        <div class="option" onclick="navigateTo('beer-form')">
             <img src="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png" alt="Have a Pint">
             <span>Have a Pint</span>
         </div>
-
-        <!-- Right option -->
         <div class="option" onclick="navigateTo('stats-insights')">
             <img src="https://em-content.zobj.net/thumbs/120/apple/354/bar-chart_1f4ca.png" alt="Stats & Insights">
             <span>Stats & Insights</span>
         </div>
     </div>
-
-    <script>
-        // Simple navigation handler
-        function navigateTo(page) {
-            if (page === "have-a-pint") {
-                window.location.href = "beer-form.html"; // Link to your beer submission page
-            } else if (page === "stats-insights") {
-                window.location.href = "stats.html"; // Link to your stats page
-            }
-        }
-    </script>
-
+    <footer>
+        <p>© 2025 Brava Team. Built with 🍺 and care. <a href="https://github.com/madbildr/brava" target="_blank">GitHub Repo</a></p>
+    </footer>
+    <script src="scripts.js"></script>
 </body>
 </html>

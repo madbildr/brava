@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+}
+
+.logo {
+    text-align: center;
+    font-size: 2rem;
+    margin: 20px 0;
+    font-weight: bold;
+    color: #FFD700; /* Golden color for the brand name */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.option {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+    border: 3px solid #FFD700; /* Golden border */
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px;
+    width: 150px;
+    background-color: white;
+}
+
+    .option img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .option span {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: bold; /* Thick font for button text */
+        color: #333;
+    }
+
+    .option:hover {
+        transform: scale(1.1);
+        background-color: #FFD700; /* Golden background on hover */
+        color: white;
+    }
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+    footer a {
+        text-decoration: none;
+        color: #FFD700; /* Golden color for the GitHub link */
+    }
+
+        footer a:hover {
+            color: #ffcc00;
+        }

@@ -3,285 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Have a Pint</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f8f8f8;
-        }
-
-        #form-container {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            padding: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .step {
-            display: none;
-        }
-
-            .step.active {
-                display: block;
-            }
-
-        button {
-            background-color: gold;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-            button:hover {
-                background-color: darkgoldenrod;
-            }
-
-            button:disabled {
-                background-color: lightgray;
-                cursor: not-allowed;
-            }
-    </style>
+    <meta name="description" content="Log your pint details with Brava - Your beer adventure companion.">
+    <title>Have a Pint - Brava</title>
+    <link rel="stylesheet" href="form-styles.css">
 </head>
 <body>
     <div id="form-container">
         <h1>Have a Pint</h1>
         <div id="step-forms">
+            <!-- Step 1: Name -->
             <div class="step active">
                 <label for="name">What's your name?</label>
-                <input type="text" id="name" name="name">
-                <button type="button" id="next1">Next</button>
+                <input type="text" id="name" name="name" placeholder="Enter your name">
+                <button type="button" class="next-btn">Next</button>
             </div>
+
+            <!-- Step 2: Beer Brand -->
             <div class="step">
                 <label for="beerBrand">What brand of beer was it?</label>
-                <input type="text" id="beerBrand" name="beerBrand">
-                <button type="button" id="next2">Next</button>
+                <input type="text" id="beerBrand" name="beerBrand" placeholder="Enter the beer brand">
+                <button type="button" class="next-btn">Next</button>
             </div>
+
+            <!-- Step 3: Location -->
             <div class="step">
                 <label for="location">Where did you have it?</label>
-                <input type="text" id="location" name="location" placeholder="Search for a pub or place" />
-                <div id="map" style="height: 300px; width: 100%;"></div>
-                <button type="button" id="next3">Next</button>
+                <input type="text" id="location" name="location" placeholder="Search for a pub or place">
+                <div id="map"></div>
+                <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"></script>
+                <button type="button" class="next-btn">Next</button>
             </div>
 
-            <!-- Leaflet.js -->
-            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
-            <!-- Leaflet Control Geocoder (for search functionality) -->
-            <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-            <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-
-            <script>
-                let selectedLocationName = ""; // Variable to store the name of the selected location
-
-                // Initialize the Leaflet map
-                function initMap() {
-                    // Default to Bristol, UK
-                    const map = L.map('map').setView([51.4545, -2.5879], 13); // Bristol coordinates
-
-                    // Add OpenStreetMap tile layer
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    }).addTo(map);
-
-                    // Add a search control using OSM Nominatim (geocoding service)
-                    const geocoder = L.Control.Geocoder.nominatim();
-                    L.Control.geocoder({
-                        query: '',
-                        placeholder: 'Search for a pub or place...',
-                        collapsed: false,
-                        geocoder: geocoder
-                    }).addTo(map);
-
-                    // Add an event listener to capture the location name when a user selects a place
-                    geocoder.on('markgeocode', function (event) {
-                        const locationName = event.geocode.name;
-                        selectedLocationName = locationName;
-
-                        // Set the input field value to the selected location name
-                        document.getElementById("location").value = locationName;
-
-                        // Optionally, add a marker at the selected location on the map
-                        L.marker(event.geocode.center).addTo(map);
-                    });
-                }
-
-                // Initialize map on page load
-                initMap();
-
-                // When the user presses "Next", store the location name and proceed
-                document.getElementById('next3').addEventListener('click', function () {
-                    formData['location'] = selectedLocationName; // Store only the location name
-                    nextStep(); // Proceed to the next step
-                });
-            </script>
-
-
+            <!-- Step 4: Rating -->
             <div class="step">
                 <label for="rating">How would you rate it?</label>
                 <div id="star-rating-container">
-                    <input class="rating"
-                           type="range"
-                           id="rating"
-                           name="rating"
-                           max="5"
-                           step="0.5"
-                           value="2.5"
-                           oninput="updateStars(this)"
-                           style="--value:2.5; --fill: gold; --starsize: 3rem;">
+                    <input type="range" id="rating" name="rating" class="rating" max="5" step="0.5" value="2.5"
+                           oninput="updateStars(this)" style="--value:2.5;">
                 </div>
-                <button type="button" id="next4">Next</button>
+                <button type="button" class="next-btn">Next</button>
             </div>
 
-            <style>
-                #star-rating-container {
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
-                }
-
-                .rating {
-                    --stars: 5;
-                    --value: 2.5;
-                    --fill: gold;
-                    --fillbg: rgba(100, 100, 100, 0.15);
-                    --starsize: 3rem;
-                    --w: calc(var(--stars) * var(--starsize));
-                    position: relative;
-                    -webkit-appearance: none;
-                    display: block;
-                    width: var(--w);
-                    height: var(--starsize);
-                    background: linear-gradient( to right, var(--fill) 0%, var(--fill) calc(var(--value) / var(--stars) * 100%), var(--fillbg) calc(var(--value) / var(--stars) * 100%), var(--fillbg) 100% );
-                    border-radius: var(--starsize);
-                    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="black" d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/%3E%3C/svg%3E');
-                    background-repeat: repeat-x;
-                    background-size: calc(var(--starsize) * 1) calc(var(--starsize) * 1);
-                    background-position: left center;
-                }
-
-                    /* Hide slider thumb */
-                    .rating::-moz-range-thumb,
-                    .rating::-webkit-slider-thumb {
-                        background-color: transparent;
-                        width: 0;
-                        height: 0;
-                        opacity: 0;
-                    }
-            </style>
-
-            <script>
-                function updateStars(input) {
-                    const ratingValue = input.valueAsNumber;
-                    input.style.setProperty('--value', `${ratingValue}`);
-                }
-
-                document.getElementById('next4').addEventListener('click', function () {
-                    const ratingValue = document.getElementById('rating').valueAsNumber;
-                    alert(`Rating submitted: ${ratingValue}`);
-                });
-            </script>
+            <!-- Step 5: Comments -->
             <div class="step">
                 <label for="comments">Any additional comments?</label>
-                <textarea id="comments" name="comments"></textarea>
+                <textarea id="comments" name="comments" placeholder="Share your thoughts"></textarea>
                 <button type="button" id="submit-button">Submit</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Config -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-
-        // Firebase config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
-            authDomain: "brava-8d79e.firebaseapp.com",
-            projectId: "brava-8d79e",
-            storageBucket: "brava-8d79e.appspot.com",
-            messagingSenderId: "1046018244812",
-            appId: "1:1046018244812:web:3b6de346e4face1bf5c269",
-            measurementId: "G-45LV2F2Z7D"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Form data handling
-        const steps = document.querySelectorAll('.step');
-        let currentStep = 0;
-        const formData = {};
-
-        function saveCurrentStep() {
-            const inputs = steps[currentStep].querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                formData[input.name] = input.value;
-            });
-        }
-
-        function updateStep() {
-            steps.forEach(step => step.classList.remove('active'));
-            steps[currentStep].classList.add('active');
-        }
-
-        function nextStep() {
-            if (currentStep < steps.length - 1) {
-                saveCurrentStep();
-                currentStep++;
-                updateStep();
-            } else {
-                saveCurrentStep();
-                console.log('Form data ready for submission:', formData);
-                submitForm(formData).then(() => {
-                    alert('Your data has been submitted!');
-                    location.reload(); // Reset form after submission
-                }).catch((error) => {
-                    alert('Failed to submit data. Check the console for errors.');
-                    console.error(error);
-                });
-            }
-        }
-
-        async function submitForm(data) {
-            try {
-                // Add timestamp to the data
-                const dataWithTimestamp = {
-                    ...data,
-                    timestamp: Timestamp.now() // Adds current timestamp
-                };
-
-                // Submit the data to the 'beers' collection
-                const docRef = await addDoc(collection(db, "beers"), dataWithTimestamp);
-                console.log("Document written with ID: ", docRef.id);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                throw e;
-            }
-        }
-
-        // Attach event listeners to buttons
-        document.getElementById("next1").addEventListener("click", nextStep);
-        document.getElementById("next2").addEventListener("click", nextStep);
-        document.getElementById("next3").addEventListener("click", nextStep);
-        document.getElementById("next4").addEventListener("click", nextStep);
-        document.getElementById("submit-button").addEventListener("click", nextStep);
-    </script>
-    
-
+    <!-- Firebase Config and Form Logic -->
+    <script type="module" src="form-scripts.js"></script>
 </body>
 </html>

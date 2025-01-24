@@ -1,0 +1,46 @@
+#form-container {
+    max-width: 400px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.step {
+    display: none;
+}
+
+    .step.active {
+        display: block;
+    }
+
+.error {
+    border: 2px solid red;
+}
+
+
+button {
+    background-color: gold;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    button:hover {
+        background-color: darkgoldenrod;
+    }
+
+    button:disabled {
+        background-color: lightgray;
+        cursor: not-allowed;
+    }
+
+#map {
+    width: 100%;
+    height: 200px;
+    margin-top: 10px;
+}
