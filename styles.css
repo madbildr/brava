@@ -64,7 +64,6 @@ footer {
             color: #ffcc00;
         }
 
-/* Add this to your existing styles.css */
 .facts-container {
     margin: 40px auto;
     max-width: 600px;
@@ -75,30 +74,31 @@ footer {
     border-radius: 15px;
     overflow: hidden;
     position: relative;
-    height: 60px;
 }
 
-.facts-roulette {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    animation: scrollFacts 20s linear infinite;
+.facts-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
-    .facts-roulette p {
-        margin: 0;
-        font-size: 1.1rem;
-        color: #333;
-        line-height: 60px;
-    }
-
-@keyframes scrollFacts {
-    0% {
-        transform: translateY(0);
-    }
-
-    100% {
-        transform: translateY(-100%);
-    }
+.fact {
+    flex: 1;
+    padding: 10px;
+    font-size: 1.1rem;
+    color: #333;
 }
+
+.arrow-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #FFD700;
+    transition: color 0.3s;
+}
+
+    .arrow-button:hover {
+        color: #ffcc00;
+    }
