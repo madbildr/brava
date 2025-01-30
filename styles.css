@@ -63,3 +63,42 @@ footer {
         footer a:hover {
             color: #ffcc00;
         }
+
+/* Add this to your existing styles.css */
+.facts-container {
+    margin: 40px auto;
+    max-width: 600px;
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border: 3px solid #FFD700;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    height: 60px;
+}
+
+.facts-roulette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    animation: scrollFacts 20s linear infinite;
+}
+
+    .facts-roulette p {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #333;
+        line-height: 60px;
+    }
+
+@keyframes scrollFacts {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
