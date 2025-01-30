@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = {
             name: document.getElementById("name").value,
             beerBrand: document.getElementById("beer-brand").value,
-            rating: parseInt(document.getElementById("selected").value, 10),
+            rating: parseInt(document.getElementById("rating").value, 10),
             location: document.getElementById("location").value,
             timestamp: serverTimestamp()
         };
