@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Google Maps Initialization
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 51.45, lng: 2.58 },
+            center: { lat: 51.45, lng: -2.58 },
             zoom: 8,
         });
 
