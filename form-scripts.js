@@ -1,6 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
     authDomain: "brava-8d79e.firebaseapp.com",
@@ -11,129 +13,119 @@ const firebaseConfig = {
     measurementId: "G-45LV2F2Z7D"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let currentStep = 0;
-const steps = document.querySelectorAll('.step');
-const formData = {};
-
-// Save the current step data
-function saveCurrentStep() {
-    const inputs = steps[currentStep].querySelectorAll('input, textarea');
-    inputs.forEach(input => formData[input.name] = input.value);
-}
-
-// Update active step
-function updateStep() {
-    steps.forEach(step => step.classList.remove('active'));
-    steps[currentStep].classList.add('active');
-}
-
-// Move to the next step
-function nextStep() {
-    saveCurrentStep();
-    if (currentStep < steps.length - 1) {
-        currentStep++;
-        updateStep();
-    } else {
-        submitForm(formData);
-    }
-}
-
-// Submit form to Firestore
-async function submitForm(data) {
-    try {
-        await addDoc(collection(db, "beers"), {
-            ...data,
-            timestamp: Timestamp.now(),
-        });
-        alert("Submitted successfully!");
-        location.reload();
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Submission failed!");
-    }
-}
-
-// Initialize Google Maps
-function initMap() {
-    const mapElement = document.getElementById("map");
-    if (mapElement) {
-        const map = new google.maps.Map(mapElement, { center: { lat: 0, lng: 0 }, zoom: 3 });
-        const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
-        autocomplete.addListener("place_changed", () => {
-            const place = autocomplete.getPlace();
-            map.setCenter(place.geometry.location);
-        });
-    } else {
-        console.error("Map element not found.");
-    }
-}
-
-window.initMap = initMap;
+// Google Maps Variables
+let map;
+let marker;
+let autocomplete;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const nextButtons = document.querySelectorAll(".next-btn");
-    const submitButton = document.getElementById("submit-button");
-    let currentStepIndex = 0;
+    const steps = document.querySelectorAll(".step");
+    let currentStep = 0;
 
-    // Update step display
-    function updateStepDisplay() {
+    // Initialize Google Maps
+    initMap();
+
+    // Step Navigation Functions
+    function updateStep() {
         steps.forEach((step, index) => {
-            step.classList.toggle("active", index === currentStepIndex);
+            step.classList.toggle("active", index === currentStep);
         });
     }
 
-    // Handle next button click
-    nextButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            const inputs = steps[currentStepIndex].querySelectorAll("input, textarea");
-            let valid = true;
+    function nextStep() {
+        const currentInputs = steps[currentStep].querySelectorAll("input");
+        let isValid = true;
 
-            // Input validation
-            inputs.forEach((input) => {
-                if (input.value.trim() === "") {
-                    input.classList.add("error");
-                    valid = false;
-                } else {
-                    input.classList.remove("error");
-                }
-            });
-
-            if (!valid) return;
-
-            // Move to the next step
-            if (currentStepIndex < steps.length - 1) {
-                currentStepIndex++;
-                updateStepDisplay();
+        currentInputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.classList.add("error");
+                isValid = false;
+            } else {
+                input.classList.remove("error");
             }
         });
+
+        if (isValid && currentStep < steps.length - 1) {
+            currentStep++;
+            updateStep();
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            updateStep();
+        }
+    }
+
+    // Event Listeners for Buttons
+    document.querySelectorAll(".next-btn").forEach(button => {
+        button.addEventListener("click", nextStep);
     });
 
-    // Handle submit button click
-    submitButton.addEventListener("click", () => {
-        // Save the last step's data before submitting
-        saveCurrentStep();
+    document.querySelectorAll(".prev-btn").forEach(button => {
+        button.addEventListener("click", prevStep);
+    });
 
-        // Gather form data from all steps
-        const allData = {};
-        steps.forEach((step) => {
-            const inputs = step.querySelectorAll("input, textarea");
-            inputs.forEach((input) => {
-                if (input.name) {
-                    allData[input.name] = input.value;
-                }
-            });
+    // Form Submission
+    document.getElementById("beer-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name: document.getElementById("name").value,
+            beerBrand: document.getElementById("beer-brand").value,
+            rating: parseInt(document.getElementById("rating").value, 10),
+            location: document.getElementById("location").value,
+            timestamp: serverTimestamp()
+        };
+
+        try {
+            await addDoc(collection(db, "beerRatings"), formData);
+            alert("Form submitted successfully!");
+            console.log("Form Data:", formData);
+
+            document.getElementById("beer-form").reset();
+            currentStep = 0;
+            updateStep();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("Failed to submit the form. Please try again.");
+        }
+    });
+
+    // Google Maps Initialization
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -34.397, lng: 150.644 },
+            zoom: 8,
         });
 
-        // Log the complete form data to console (for testing)
-        console.log("Form data:", allData);
+        autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
+        autocomplete.bindTo("bounds", map);
 
-        // Submit to Firestore
-        submitForm(allData);
-    });
+        marker = new google.maps.Marker({
+            map,
+            anchorPoint: new google.maps.Point(0, -29),
+        });
 
-    // Initialize step display
-    updateStepDisplay();
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+            marker.setPosition(place.geometry.location);
+        });
+    }
 });
