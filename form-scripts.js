@@ -129,27 +129,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const stars = document.querySelectorAll(".star-rating span");
+    const selectedRating = document.getElementById("selected-rating");
 
-});
+    stars.forEach(star => {
+        star.addEventListener("click", () => {
+            const value = star.getAttribute("data-value");
+            selectedRating.textContent = value;
 
-const stars = document.querySelectorAll(".star-rating span");
-const selectedRating = document.getElementById("selected-rating");
+            // Highlight selected stars
+            stars.forEach((s, index) => {
+                if (index < value) {
+                    s.classList.add("selected");
+                } else {
+                    s.classList.remove("selected");
+                }
+            });
 
-stars.forEach(star => {
-    star.addEventListener("click", () => {
-        const value = star.getAttribute("data-value");
-        selectedRating.textContent = value;
-
-        // Highlight selected stars
-        stars.forEach((s, index) => {
-            if (index < value) {
-                s.classList.add("selected");
-            } else {
-                s.classList.remove("selected");
-            }
+            // Update the hidden input value (if needed)
+            document.getElementById("rating").value = value;
         });
-
-        // Update the hidden input value (if needed)
-        document.getElementById("rating").value = value;
     });
+
+
 });
+
