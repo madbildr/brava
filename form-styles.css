@@ -43,3 +43,17 @@ button {
     width: 100%;
     margin-bottom: 10px;
 }
+.star-rating {
+    font-size: 2rem;
+    cursor: pointer;
+    color: lightgray;
+}
+
+    .star-rating span:hover,
+    .star-rating span:hover ~ span {
+        color: gold;
+    }
+
+    .star-rating span.selected {
+        color: gold;
+    }
