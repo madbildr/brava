@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Predefined list of beers with logos
     const beers = [
-        { name: "Heineken", logo: "https://via.placeholder.com/30" },
+        { name: "Heineken", logo: "https://dutchkingsday.com/sponsor/heineken/heineken-logo-2023/" },
         { name: "Guinness", logo: "https://via.placeholder.com/30" },
         { name: "Budweiser", logo: "https://via.placeholder.com/30" },
         { name: "Corona", logo: "https://via.placeholder.com/30" },
