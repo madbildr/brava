@@ -151,62 +151,64 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        // Predefined list of beers with logos
-        const beers = [
-            { name: "Heineken", logo: "https://via.placeholder.com/30" },
-            { name: "Guinness", logo: "https://via.placeholder.com/30" },
-            { name: "Budweiser", logo: "https://via.placeholder.com/30" },
-            { name: "Corona", logo: "https://via.placeholder.com/30" },
-            { name: "Stella Artois", logo: "https://via.placeholder.com/30" },
-            { name: "IPA", logo: "https://via.placeholder.com/30" },
-            { name: "Pilsner", logo: "https://via.placeholder.com/30" },
-            { name: "Pale Ale", logo: "https://via.placeholder.com/30" },
-        ];
+    
 
-        const beerInput = document.getElementById("beer-brand");
-        const dropdownList = document.querySelector(".dropdown-list");
 
-        // Populate dropdown with beer options
-        function populateDropdown(filter = "") {
-            dropdownList.innerHTML = ""; // Clear existing options
-            const filteredBeers = beers.filter(beer =>
-                beer.name.toLowerCase().includes(filter.toLowerCase())
-            );
+});
 
-            filteredBeers.forEach(beer => {
-                const option = document.createElement("div");
-                option.innerHTML = `
+document.addEventListener("DOMContentLoaded", () => {
+    // Predefined list of beers with logos
+    const beers = [
+        { name: "Heineken", logo: "https://via.placeholder.com/30" },
+        { name: "Guinness", logo: "https://via.placeholder.com/30" },
+        { name: "Budweiser", logo: "https://via.placeholder.com/30" },
+        { name: "Corona", logo: "https://via.placeholder.com/30" },
+        { name: "Stella Artois", logo: "https://via.placeholder.com/30" },
+        { name: "IPA", logo: "https://via.placeholder.com/30" },
+        { name: "Pilsner", logo: "https://via.placeholder.com/30" },
+        { name: "Pale Ale", logo: "https://via.placeholder.com/30" },
+    ];
+
+    const beerInput = document.getElementById("beer-brand");
+    const dropdownList = document.querySelector(".dropdown-list");
+
+    // Populate dropdown with beer options
+    function populateDropdown(filter = "") {
+        dropdownList.innerHTML = ""; // Clear existing options
+        const filteredBeers = beers.filter(beer =>
+            beer.name.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        filteredBeers.forEach(beer => {
+            const option = document.createElement("div");
+            option.innerHTML = `
                 <img src="${beer.logo}" alt="${beer.name}">
                 <span>${beer.name}</span>
             `;
-                option.addEventListener("click", () => {
-                    beerInput.value = beer.name; // Set input value to selected beer
-                    dropdownList.style.display = "none"; // Hide dropdown
-                });
-                dropdownList.appendChild(option);
+            option.addEventListener("click", () => {
+                beerInput.value = beer.name; // Set input value to selected beer
+                dropdownList.style.display = "none"; // Hide dropdown
             });
-        }
-
-        // Show dropdown when input is focused
-        beerInput.addEventListener("focus", () => {
-            populateDropdown();
-            dropdownList.style.display = "block";
+            dropdownList.appendChild(option);
         });
+    }
 
-        // Filter dropdown options as user types
-        beerInput.addEventListener("input", (e) => {
-            populateDropdown(e.target.value);
-        });
-
-        // Hide dropdown when clicking outside
-        document.addEventListener("click", (e) => {
-            if (!e.target.closest(".custom-dropdown")) {
-                dropdownList.style.display = "none";
-            }
-        });
+    // Show dropdown when input is focused
+    beerInput.addEventListener("focus", () => {
+        populateDropdown();
+        dropdownList.style.display = "block";
     });
 
+    // Filter dropdown options as user types
+    beerInput.addEventListener("input", (e) => {
+        populateDropdown(e.target.value);
+    });
 
+    // Hide dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".custom-dropdown")) {
+            dropdownList.style.display = "none";
+        }
+    });
 });
 
