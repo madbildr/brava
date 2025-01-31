@@ -1,5 +1,5 @@
 #form-container {
-    max-width: 400px;
+    max-width: 100%;
     margin: 20px auto;
     background: white;
     padding: 20px;
@@ -27,6 +27,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
+    font-size: 1.5rem; /* Larger font size for emojis */
 }
 
     button:hover {
@@ -43,6 +44,7 @@ button {
     width: 100%;
     margin-bottom: 10px;
 }
+
 .star-rating {
     font-size: 2rem;
     cursor: pointer;
@@ -57,3 +59,19 @@ button {
     .star-rating span.selected {
         color: gold;
     }
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    #form-container {
+        padding: 10px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 1.2rem;
+    }
+
+    .star-rating {
+        font-size: 1.5rem;
+    }
+}
