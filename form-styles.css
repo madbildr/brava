@@ -97,3 +97,57 @@ input {
         width: 90%; /* Wider inputs and buttons on smaller screens */
     }
 }
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+    position: relative;
+    width: 80%;
+    max-width: 300px;
+    margin: 10px auto;
+}
+
+    .custom-dropdown input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    .dropdown-list div {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+
+        .dropdown-list div:hover {
+            background-color: #f9f9f9;
+        }
+
+    .dropdown-list img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+
+/* Show dropdown list when input is focused */
+.custom-dropdown input:focus + .dropdown-list {
+    display: block;
+}

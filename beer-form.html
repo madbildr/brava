@@ -19,7 +19,12 @@
             <!-- Step 2 -->
             <div class="step">
                 <h2>Step 2: Beer Details</h2>
-                <input type="text" id="beer-brand" name="beerBrand" placeholder="Enter beer brand" required>
+                <div class="custom-dropdown">
+                    <input type="text" id="beer-brand" name="beerBrand" placeholder="Search for a beer..." autocomplete="off">
+                    <div class="dropdown-list">
+                        <!-- Beer options will be dynamically populated here -->
+                    </div>
+                </div>
                 <button type="button" class="prev-btn">⬅️</button>
                 <button type="button" class="next-btn">➡️</button>
             </div>
