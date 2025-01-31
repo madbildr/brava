@@ -5,6 +5,7 @@
     padding: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    text-align: center; /* Center-align all text */
 }
 
 .step {
@@ -60,6 +61,22 @@ button {
         color: gold;
     }
 
+/* Center-align input fields and buttons */
+.step input,
+.step button {
+    display: block;
+    margin: 10px auto; /* Center-align inputs and buttons */
+    width: 80%; /* Adjust width for better mobile responsiveness */
+    max-width: 300px; /* Limit maximum width */
+    font-size: 16px; /* Prevent auto-zoom on mobile */
+}
+
+/* Ensure input fields have a minimum font size of 16px */
+input {
+    font-size: 16px !important; /* Prevent auto-zoom */
+    padding: 10px; /* Add padding for better touch interaction */
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
     #form-container {
@@ -73,5 +90,10 @@ button {
 
     .star-rating {
         font-size: 1.5rem;
+    }
+
+    .step input,
+    .step button {
+        width: 90%; /* Wider inputs and buttons on smaller screens */
     }
 }
