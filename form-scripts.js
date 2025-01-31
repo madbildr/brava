@@ -7,7 +7,7 @@ const firebaseConfig = {
     apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
     authDomain: "brava-8d79e.firebaseapp.com",
     projectId: "brava-8d79e",
-    storageBucket: "brava-8d79e.firebasestorage.app",
+    storageBucket: "brava-8d79e.appspot.com",
     messagingSenderId: "1046018244812",
     appId: "1:1046018244812:web:3b6de346e4face1bf5c269",
     measurementId: "G-45LV2F2Z7D"
@@ -28,6 +28,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize Google Maps
     initMap();
+
+    // Predefined list of beers with logos
+    const beers = [
+        { name: "Heineken", logo: "https://via.placeholder.com/30" },
+        { name: "Guinness", logo: "https://via.placeholder.com/30" },
+        { name: "Budweiser", logo: "https://via.placeholder.com/30" },
+        { name: "Corona", logo: "https://via.placeholder.com/30" },
+        { name: "Stella Artois", logo: "https://via.placeholder.com/30" },
+        { name: "IPA", logo: "https://via.placeholder.com/30" },
+        { name: "Pilsner", logo: "https://via.placeholder.com/30" },
+        { name: "Pale Ale", logo: "https://via.placeholder.com/30" },
+    ];
+
+    const beerInput = document.getElementById("beer-brand");
+    const dropdownList = document.querySelector(".dropdown-list");
+
+    // Populate dropdown with beer options
+    function populateDropdown(filter = "") {
+        dropdownList.innerHTML = ""; // Clear existing options
+        const filteredBeers = beers.filter(beer =>
+            beer.name.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        filteredBeers.forEach(beer => {
+            const option = document.createElement("div");
+            option.innerHTML = `
+                <img src="${beer.logo}" alt="${beer.name}">
+                <span>${beer.name}</span>
+            `;
+            option.addEventListener("click", () => {
+                beerInput.value = beer.name; // Set input value to selected beer
+                dropdownList.style.display = "none"; // Hide dropdown
+            });
+            dropdownList.appendChild(option);
+        });
+    }
+
+    // Show dropdown when input is focused
+    beerInput.addEventListener("focus", () => {
+        populateDropdown();
+        dropdownList.style.display = "block";
+    });
+
+    // Filter dropdown options as user types
+    beerInput.addEventListener("input", (e) => {
+        populateDropdown(e.target.value);
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".custom-dropdown")) {
+            dropdownList.style.display = "none";
+        }
+    });
 
     // Step Navigation Functions
     function updateStep() {
@@ -129,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Star Rating Functionality
     const stars = document.querySelectorAll(".star-rating span");
     const selectedRating = document.getElementById("selected-rating");
 
@@ -146,69 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // Update the hidden input value (if needed)
+            // Update the hidden input value
             document.getElementById("rating").value = value;
         });
     });
-
-    
-
-
 });
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Predefined list of beers with logos
-    const beers = [
-        { name: "Heineken", logo: "https://via.placeholder.com/30" },
-        { name: "Guinness", logo: "https://via.placeholder.com/30" },
-        { name: "Budweiser", logo: "https://via.placeholder.com/30" },
-        { name: "Corona", logo: "https://via.placeholder.com/30" },
-        { name: "Stella Artois", logo: "https://via.placeholder.com/30" },
-        { name: "IPA", logo: "https://via.placeholder.com/30" },
-        { name: "Pilsner", logo: "https://via.placeholder.com/30" },
-        { name: "Pale Ale", logo: "https://via.placeholder.com/30" },
-    ];
-
-    const beerInput = document.getElementById("beer-brand");
-    const dropdownList = document.querySelector(".dropdown-list");
-
-    // Populate dropdown with beer options
-    function populateDropdown(filter = "") {
-        dropdownList.innerHTML = ""; // Clear existing options
-        const filteredBeers = beers.filter(beer =>
-            beer.name.toLowerCase().includes(filter.toLowerCase())
-        );
-
-        filteredBeers.forEach(beer => {
-            const option = document.createElement("div");
-            option.innerHTML = `
-                <img src="${beer.logo}" alt="${beer.name}">
-                <span>${beer.name}</span>
-            `;
-            option.addEventListener("click", () => {
-                beerInput.value = beer.name; // Set input value to selected beer
-                dropdownList.style.display = "none"; // Hide dropdown
-            });
-            dropdownList.appendChild(option);
-        });
-    }
-
-    // Show dropdown when input is focused
-    beerInput.addEventListener("focus", () => {
-        populateDropdown();
-        dropdownList.style.display = "block";
-    });
-
-    // Filter dropdown options as user types
-    beerInput.addEventListener("input", (e) => {
-        populateDropdown(e.target.value);
-    });
-
-    // Hide dropdown when clicking outside
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest(".custom-dropdown")) {
-            dropdownList.style.display = "none";
-        }
-    });
-});
-
