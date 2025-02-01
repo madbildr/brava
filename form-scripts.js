@@ -161,9 +161,10 @@ document.addEventListener("DOMContentLoaded", () => {
         autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
         autocomplete.bindTo("bounds", map);
 
-        marker = new google.maps.Marker({
+        // Use AdvancedMarkerElement instead of Marker
+        marker = new google.maps.marker.AdvancedMarkerElement({
             map,
-            anchorPoint: new google.maps.Point(0, -29),
+            position: null, // Initially no position
         });
 
         autocomplete.addListener("place_changed", () => {
@@ -179,7 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 map.setCenter(place.geometry.location);
                 map.setZoom(17);
             }
-            marker.setPosition(place.geometry.location);
+
+            // Update the marker's position
+            marker.position = place.geometry.location;
         });
     }
 
