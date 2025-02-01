@@ -98,22 +98,12 @@ input {
     }
 }
 
-/* Custom Dropdown Styles */
 .custom-dropdown {
     position: relative;
     width: 80%;
     max-width: 300px;
     margin: 10px auto;
 }
-
-    .custom-dropdown input {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
 
 .dropdown-list {
     display: none;
@@ -146,8 +136,3 @@ input {
         margin-right: 10px;
         border-radius: 50%;
     }
-
-/* Show dropdown list when input is focused */
-.custom-dropdown input:focus + .dropdown-list {
-    display: block;
-}

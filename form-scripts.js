@@ -207,13 +207,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-beerInput.addEventListener("focus", (e) => {
-    console.log("Focus event triggered"); // Debugging line
-    populateDropdown();
-    dropdownList.style.display = "block";
-});
-
-beerInput.addEventListener("input", (e) => {
-    console.log("Input event triggered"); // Debugging line
-    populateDropdown(e.target.value);
-});
