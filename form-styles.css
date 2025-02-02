@@ -1,3 +1,59 @@
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    max-width: 300px;
+    margin: 10px auto;
+}
+
+.dropbtn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    .dropdown-content div {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+
+        .dropdown-content div:hover {
+            background-color: #f9f9f9;
+        }
+
+    .dropdown-content img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        border-radius: 50%;
+    }
+
+.show {
+    display: block;
+}
+
+/* Rest of your CSS */
 #form-container {
     max-width: 100%;
     margin: 20px auto;
@@ -5,7 +61,7 @@
     padding: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    text-align: center; /* Center-align all text */
+    text-align: center;
 }
 
 .step {
@@ -28,7 +84,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     margin-top: 10px;
-    font-size: 1.5rem; /* Larger font size for emojis */
+    font-size: 1.5rem;
 }
 
     button:hover {
@@ -61,23 +117,20 @@ button {
         color: gold;
     }
 
-/* Center-align input fields and buttons */
 .step input,
 .step button {
     display: block;
-    margin: 10px auto; /* Center-align inputs and buttons */
-    width: 80%; /* Adjust width for better mobile responsiveness */
-    max-width: 300px; /* Limit maximum width */
-    font-size: 16px; /* Prevent auto-zoom on mobile */
+    margin: 10px auto;
+    width: 80%;
+    max-width: 300px;
+    font-size: 16px;
 }
 
-/* Ensure input fields have a minimum font size of 16px */
 input {
-    font-size: 16px !important; /* Prevent auto-zoom */
-    padding: 10px; /* Add padding for better touch interaction */
+    font-size: 16px !important;
+    padding: 10px;
 }
 
-/* Responsive Design */
 @media (max-width: 600px) {
     #form-container {
         padding: 10px;
@@ -94,45 +147,6 @@ input {
 
     .step input,
     .step button {
-        width: 90%; /* Wider inputs and buttons on smaller screens */
+        width: 90%;
     }
 }
-
-.custom-dropdown {
-    position: relative;
-    width: 80%;
-    max-width: 300px;
-    margin: 10px auto;
-}
-
-.dropdown-list {
-    display: none;
-    position: absolute;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-top: none;
-    background: white;
-    z-index: 1000;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-    .dropdown-list div {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        cursor: pointer;
-        border-bottom: 1px solid #eee;
-    }
-
-        .dropdown-list div:hover {
-            background-color: #f9f9f9;
-        }
-
-    .dropdown-list img {
-        width: 30px;
-        height: 30px;
-        margin-right: 10px;
-        border-radius: 50%;
-    }

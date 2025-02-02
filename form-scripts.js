@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const beerInput = document.getElementById("beer-brand");
-    const dropdownList = document.querySelector(".dropdown-list");
+    const dropdownList = document.getElementById("beerDropdown");
 
     // Populate dropdown with beer options
     function populateDropdown(filter = "") {
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             option.addEventListener("click", () => {
                 beerInput.value = beer.name; // Set input value to selected beer
-                dropdownList.style.display = "none"; // Hide dropdown
+                dropdownList.classList.remove("show"); // Hide dropdown
             });
             dropdownList.appendChild(option);
         });
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show dropdown when input is focused
     beerInput.addEventListener("focus", () => {
         populateDropdown();
-        dropdownList.style.display = "block";
+        dropdownList.classList.add("show");
     });
 
     // Filter dropdown options as user types
@@ -76,10 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
         populateDropdown(e.target.value);
     });
 
-    // Hide dropdown when clicking outside
+    // Close the dropdown if the user clicks outside
     document.addEventListener("click", (e) => {
-        if (!e.target.closest(".custom-dropdown")) {
-            dropdownList.style.display = "none";
+        if (!e.target.matches(".dropbtn") && !e.target.closest(".dropdown-content")) {
+            dropdownList.classList.remove("show");
         }
     });
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beer Form</title>
-    <link rel="stylesheet" href="form-styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="form-container">
@@ -19,9 +19,9 @@
             <!-- Step 2 -->
             <div class="step">
                 <h2>Step 2: Beer Details</h2>
-                <div class="custom-dropdown">
-                    <input type="text" id="beer-brand" name="beerBrand" placeholder="Search for a beer..." autocomplete="off">
-                    <div class="dropdown-list">
+                <div class="dropdown">
+                    <input type="text" id="beer-brand" class="dropbtn" placeholder="Search for a beer..." autocomplete="off">
+                    <div id="beerDropdown" class="dropdown-content">
                         <!-- Beer options will be dynamically populated here -->
                     </div>
                 </div>
@@ -62,8 +62,7 @@
     </div>
 
     <!-- Firebase and Google Maps Scripts -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=places"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=marker"></script>
-    <script type="module" src="form-scripts.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=places&loading=async&v=beta" async defer></script>
+    <script type="module" src="scripts.js"></script>
 </body>
 </html>
