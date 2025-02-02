@@ -11,22 +11,4 @@ const facts = [
     "The longest football match lasted 35 hours and ended with a score of 401-392!"
 ];
 
-function updateFact() {
-    const factElement = document.querySelector('.fact p');
-    factElement.textContent = facts[currentFactIndex];
-}
 
-function nextFact() {
-    currentFactIndex = (currentFactIndex + 1) % facts.length;
-    updateFact();
-}
-
-function prevFact() {
-    currentFactIndex = (currentFactIndex - 1 + facts.length) % facts.length;
-    updateFact();
-}
-
-// Initialize with the first fact
-document.addEventListener('DOMContentLoaded', () => {
-    updateFact();
-});
