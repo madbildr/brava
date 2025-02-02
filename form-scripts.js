@@ -90,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
     function nextStep() {
         const currentInputs = steps[currentStep].querySelectorAll("input");
         let isValid = true;
