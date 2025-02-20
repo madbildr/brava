@@ -24,18 +24,21 @@
                 <button type="button" class="next-btn">➡️</button>
             </div>
             <div class="step">
-                <div class="star-rating">
+                <div class="beer-rating">
                     <h2>Step 3: Rate the Beer</h2>
-                    <span data-value="1">★</span>
-                    <span data-value="2">★</span>
-                    <span data-value="3">★</span>
-                    <span data-value="4">★</span>
-                    <span data-value="5">★</span>
-                    <span data-value="6">★</span>
-                    <span data-value="7">★</span>
-                    <span data-value="8">★</span>
-                    <span data-value="9">★</span>
-                    <span data-value="10">★</span>
+                    <div id="beer-emoji-display"></div> <!-- Display for beer emojis -->
+                    <div id="rating-buttons">
+                        <button type="button" data-value="1">1</button>
+                        <button type="button" data-value="2">2</button>
+                        <button type="button" data-value="3">3</button>
+                        <button type="button" data-value="4">4</button>
+                        <button type="button" data-value="5">5</button>
+                        <button type="button" data-value="6">6</button>
+                        <button type="button" data-value="7">7</button>
+                        <button type="button" data-value="8">8</button>
+                        <button type="button" data-value="9">9</button>
+                        <button type="button" data-value="10">10</button>
+                    </div>
                     <p>Rating: <span id="selected-rating">0</span>/10</p>
                     <input type="hidden" id="rating" name="rating" value="0">
                     <button type="button" class="prev-btn">⬅️</button>
@@ -51,9 +54,8 @@
             </div>
         </form>
     </div>
-    <!-- Success Popup -->
     <div id="success-popup" class="success-popup">
-        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHBmazc2M3Y1eW5hcjBlZXRrOWttbWpoZWhhenJ4c3kzOGVxaDhnNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ibolLe3mOqHE3PQTtk/giphy.gif" alt="Success Tick">
+        <img src="https://media.giphy.com/media/26FPJGjAwm8H7LLXM/giphy.gif" alt="Success Tick">
     </div>
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=places&loading=async"></script>
     <script type="module" src="form-scripts.js"></script>

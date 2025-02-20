@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
 
@@ -24,24 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const successPopup = document.getElementById("success-popup");
 
     const beers = [
-        { name: "Heineken", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Heineken_logo.svg/120px-Heineken_logo.svg.png" },
-        { name: "Guinness", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guinness-logo.svg/120px-Guinness-logo.svg.png" },
-        { name: "Budweiser", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Budweiser_logo.svg/120px-Budweiser_logo.svg.png" },
-        { name: "Corona", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Corona_Extra_logo.svg/120px-Corona_Extra_logo.svg.png" },
-        { name: "Stella Artois", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Stella_Artois_logo.svg/120px-Stella_Artois_logo.svg.png" },
-        { name: "Pilsner Urquell", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Pilsner_Urquell_logo.svg/120px-Pilsner_Urquell_logo.svg.png" },
-        { name: "Coors Light", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Coors_Light_logo.svg/120px-Coors_Light_logo.svg.png" },
-        { name: "Miller Lite", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Miller_Lite_logo.svg/120px-Miller_Lite_logo.svg.png" },
-        { name: "Peroni", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Peroni_Nastro_Azzurro_logo.svg/120px-Peroni_Nastro_Azzurro_logo.svg.png" },
-        { name: "Carlsberg", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Carlsberg_logo.svg/120px-Carlsberg_logo.svg.png" },
-        { name: "Foster's", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Foster%27s_Lager_logo.svg/120px-Foster%27s_Lager_logo.svg.png" },
-        { name: "Lagunitas IPA", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Lagunitas_Brewing_Company_logo.svg/120px-Lagunitas_Brewing_Company_logo.svg.png" },
-        { name: "Blue Moon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Blue_Moon_logo.svg/120px-Blue_Moon_logo.svg.png" },
-        { name: "Samuel Adams", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Samuel_Adams_logo.svg/120px-Samuel_Adams_logo.svg.png" },
-        { name: "Modelo Especial", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Modelo_Especial_logo.svg/120px-Modelo_Especial_logo.svg.png" },
-        { name: "Sapporo", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Sapporo_Beer_logo.svg/120px-Sapporo_Beer_logo.svg.png" },
-        { name: "Asahi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Asahi_Breweries_logo.svg/120px-Asahi_Breweries_logo.svg.png" },
-        { name: "Beck's", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Beck%27s_logo.svg/120px-Beck%27s_logo.svg.png" }
+        { name: "Heineken", logo: "assets/beer-logos/heineken.png" },
+        { name: "Guinness", logo: "assets/beer-logos/guinness.png" },
+        { name: "Budweiser", logo: "assets/beer-logos/budweiser.png" },
+        { name: "Corona", logo: "assets/beer-logos/corona.png" },
+        { name: "Stella Artois", logo: "assets/beer-logos/stella-artois.png" },
+        { name: "IPA (Generic)", logo: "assets/beer-logos/ipa.png" },
+        { name: "Pilsner Urquell", logo: "assets/beer-logos/pilsner-urquell.png" },
+        { name: "Pale Ale (Generic)", logo: "assets/beer-logos/pale-ale.png" },
+        { name: "Coors Light", logo: "assets/beer-logos/coors-light.png" },
+        { name: "Miller Lite", logo: "assets/beer-logos/miller-lite.png" },
+        { name: "Peroni", logo: "assets/beer-logos/peroni.png" },
+        { name: "Carlsberg", logo: "assets/beer-logos/carlsberg.png" },
+        { name: "Foster's", logo: "assets/beer-logos/fosters.png" },
+        { name: "Lagunitas IPA", logo: "assets/beer-logos/lagunitas-ipa.png" },
+        { name: "Blue Moon", logo: "assets/beer-logos/blue-moon.png" },
+        { name: "Samuel Adams", logo: "assets/beer-logos/samuel-adams.png" },
+        { name: "Modelo Especial", logo: "assets/beer-logos/modelo-especial.png" },
+        { name: "Sapporo", logo: "assets/beer-logos/sapporo.png" },
+        { name: "Asahi", logo: "assets/beer-logos/asahi.png" },
+        { name: "Beck's", logo: "assets/beer-logos/becks.png" }
     ];
 
     const beerInput = document.getElementById("beer-brand");
@@ -65,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         filteredBeers.forEach(beer => {
             const option = document.createElement("div");
-            option.innerHTML = `<img src="${beer.logo}" alt="${beer.name}"><span>${beer.name}</span>`;
+            option.innerHTML = `<img src="${beer.logo}" width="30" height="30" alt="${beer.name}"><span>${beer.name}</span>`;
             option.addEventListener("click", () => {
                 beerInput.value = beer.name;
                 dropdownList.classList.remove("show");
@@ -175,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await addDoc(collection(db, "beerRatings"), formData);
             successPopup.style.display = "block";
             document.getElementById("beer-form").reset();
+            document.getElementById("beer-emoji-display").textContent = ""; // Reset emojis on submit
             currentStep = 0;
             mapInitialized = false;
             updateStep();
@@ -188,24 +191,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const stars = document.querySelectorAll(".star-rating span");
+    // Beer rating button logic
+    const ratingButtons = document.querySelectorAll("#rating-buttons button");
+    const beerEmojiDisplay = document.getElementById("beer-emoji-display");
     const selectedRating = document.getElementById("selected-rating");
     const ratingInput = document.getElementById("rating");
 
-    stars.forEach(star => {
-        star.addEventListener("click", () => {
-            const value = parseInt(star.getAttribute("data-value"), 10);
+    ratingButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const value = parseInt(button.getAttribute("data-value"), 10);
             selectedRating.textContent = value;
             ratingInput.value = value;
 
-            // Explicitly set selected class for stars up to the clicked value
-            stars.forEach((s, index) => {
-                if (index < value) {
-                    s.classList.add("selected");
-                } else {
-                    s.classList.remove("selected");
-                }
-            });
+            // Display beer emojis based on rating
+            beerEmojiDisplay.textContent = "🍺".repeat(value);
+
+            // Highlight selected button
+            ratingButtons.forEach(btn => btn.classList.remove("selected"));
+            button.classList.add("selected");
         });
     });
 });

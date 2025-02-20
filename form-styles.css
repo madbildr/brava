@@ -102,20 +102,44 @@ button {
     margin-bottom: 10px;
 }
 
-.star-rating {
-    font-size: 2rem;
-    cursor: pointer;
-    color: lightgray;
+.beer-rating {
+    text-align: center;
+    margin: 20px 0;
 }
 
-    .star-rating span:hover,
-    .star-rating span:hover ~ span {
-        color: gold;
+#beer-emoji-display {
+    font-size: 2rem;
+    min-height: 40px; /* Space for emojis */
+    margin-bottom: 10px;
+}
+
+#rating-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+    #rating-buttons button {
+        background-color: #f0f0f0;
+        border: 2px solid #FFD700;
+        border-radius: 5px;
+        padding: 8px 12px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.1s;
     }
 
-    .star-rating span.selected {
-        color: gold;
-    }
+        #rating-buttons button:hover {
+            background-color: #FFD700;
+            color: white;
+        }
+
+        #rating-buttons button.selected {
+            background-color: #FFD700;
+            color: white;
+            transform: scale(1.1);
+        }
 
 .step input,
 .step button {
@@ -141,9 +165,7 @@ input {
         font-size: 1.2rem;
     }
 
-    .star-rating {
-        font-size: 1.5rem;
-    }
+    
 
     .step input,
     .step button {
