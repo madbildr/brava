@@ -24,14 +24,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const successPopup = document.getElementById("success-popup");
 
     const beers = [
-        { name: "Heineken", logo: "https://dutchkingsday.com/sponsor/heineken/heineken-logo-2023/" },
-        { name: "Guinness", logo: "https://via.placeholder.com/30" },
-        { name: "Budweiser", logo: "https://via.placeholder.com/30" },
-        { name: "Corona", logo: "https://via.placeholder.com/30" },
-        { name: "Stella Artois", logo: "https://via.placeholder.com/30" },
-        { name: "IPA", logo: "https://via.placeholder.com/30" },
-        { name: "Pilsner", logo: "https://via.placeholder.com/30" },
-        { name: "Pale Ale", logo: "https://via.placeholder.com/30" },
+        { name: "Heineken", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Heineken_logo.svg/120px-Heineken_logo.svg.png" },
+        { name: "Guinness", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Guinness-logo.svg/120px-Guinness-logo.svg.png" },
+        { name: "Budweiser", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Budweiser_logo.svg/120px-Budweiser_logo.svg.png" },
+        { name: "Corona", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Corona_Extra_logo.svg/120px-Corona_Extra_logo.svg.png" },
+        { name: "Stella Artois", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Stella_Artois_logo.svg/120px-Stella_Artois_logo.svg.png" },
+        { name: "Pilsner Urquell", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Pilsner_Urquell_logo.svg/120px-Pilsner_Urquell_logo.svg.png" },
+        { name: "Coors Light", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Coors_Light_logo.svg/120px-Coors_Light_logo.svg.png" },
+        { name: "Miller Lite", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Miller_Lite_logo.svg/120px-Miller_Lite_logo.svg.png" },
+        { name: "Peroni", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Peroni_Nastro_Azzurro_logo.svg/120px-Peroni_Nastro_Azzurro_logo.svg.png" },
+        { name: "Carlsberg", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Carlsberg_logo.svg/120px-Carlsberg_logo.svg.png" },
+        { name: "Foster's", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Foster%27s_Lager_logo.svg/120px-Foster%27s_Lager_logo.svg.png" },
+        { name: "Lagunitas IPA", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Lagunitas_Brewing_Company_logo.svg/120px-Lagunitas_Brewing_Company_logo.svg.png" },
+        { name: "Blue Moon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Blue_Moon_logo.svg/120px-Blue_Moon_logo.svg.png" },
+        { name: "Samuel Adams", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Samuel_Adams_logo.svg/120px-Samuel_Adams_logo.svg.png" },
+        { name: "Modelo Especial", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Modelo_Especial_logo.svg/120px-Modelo_Especial_logo.svg.png" },
+        { name: "Sapporo", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Sapporo_Beer_logo.svg/120px-Sapporo_Beer_logo.svg.png" },
+        { name: "Asahi", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Asahi_Breweries_logo.svg/120px-Asahi_Breweries_logo.svg.png" },
+        { name: "Beck's", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Beck%27s_logo.svg/120px-Beck%27s_logo.svg.png" }
     ];
 
     const beerInput = document.getElementById("beer-brand");
@@ -163,20 +173,18 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         try {
             await addDoc(collection(db, "beerRatings"), formData);
-            // Show success popup
             successPopup.style.display = "block";
             document.getElementById("beer-form").reset();
             currentStep = 0;
             mapInitialized = false;
             updateStep();
-            // Redirect after 2 seconds (matches animation duration)
             setTimeout(() => {
                 successPopup.style.display = "none";
                 window.location.href = "index.html";
             }, 2000);
         } catch (error) {
             console.error("Error adding document: ", error);
-            alert("Failed to submit the form. Please try again."); // Keep alert for errors
+            alert("Failed to submit the form. Please try again.");
         }
     });
 

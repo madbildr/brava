@@ -190,3 +190,9 @@ input {
         transform: translate(-50%, -60%);
     }
 }
+.dropdown-content img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50%; /* Optional: circular logos */
+}
