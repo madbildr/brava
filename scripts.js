@@ -14,73 +14,79 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-function navigateTo(page) {
-    window.location.href = `${page}.html`;
-}
-
-let currentFactIndex = 0;
-const facts = [
-    "Did you know? The fastest goal in football history was scored in 2.8 seconds!",
-    "Football was played on the moon in 1971 by Apollo 14 astronaut Alan Shepard.",
-    "The first footballs were made from pig bladders!",
-    "Brazil is the only country to have played in every World Cup.",
-    "The longest football match lasted 35 hours and ended with a score of 401-392!"
-];
-
-// Authentication handling
-const userInfo = document.getElementById("user-info");
-const signInForm = document.getElementById("sign-in-form");
-const userNameSpan = document.getElementById("user-name");
-const signOutBtn = document.getElementById("sign-out-btn");
-const signInBtn = document.getElementById("sign-in-btn");
-const signUpBtn = document.getElementById("sign-up-btn");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        userInfo.style.display = "block";
-        signInForm.style.display = "none";
-        userNameSpan.textContent = user.displayName || "User";
-    } else {
-        userInfo.style.display = "none";
-        signInForm.style.display = "block";
+document.addEventListener("DOMContentLoaded", () => {
+    // Navigation function
+    function navigateTo(page) {
+        window.location.href = `${page}.html`;
     }
-});
 
-signInBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            console.log("Signed in:", userCredential.user);
-        })
-        .catch((error) => {
-            alert("Sign-in error: " + error.message);
-        });
-});
+    // Add event listeners for navigation
+    document.getElementById("beer-form-option").addEventListener("click", () => navigateTo("beer-form"));
+    document.getElementById("stats-insights-option").addEventListener("click", () => navigateTo("stats-insights"));
 
-signUpBtn.addEventListener("click", () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            // Prompt for name during sign-up
-            const name = prompt("Please enter your name:");
-            if (name) {
-                updateProfile(user, { displayName: name })
-                    .then(() => console.log("Profile updated with name:", name))
-                    .catch((error) => console.error("Error updating profile:", error));
-            }
-        })
-        .catch((error) => {
-            alert("Sign-up error: " + error.message);
-        });
-});
+    let currentFactIndex = 0;
+    const facts = [
+        "Did you know? The fastest goal in football history was scored in 2.8 seconds!",
+        "Football was played on the moon in 1971 by Apollo 14 astronaut Alan Shepard.",
+        "The first footballs were made from pig bladders!",
+        "Brazil is the only country to have played in every World Cup.",
+        "The longest football match lasted 35 hours and ended with a score of 401-392!"
+    ];
 
-signOutBtn.addEventListener("click", () => {
-    signOut(auth)
-        .then(() => console.log("Signed out"))
-        .catch((error) => alert("Sign-out error: " + error.message));
+    // Authentication handling
+    const userInfo = document.getElementById("user-info");
+    const signInForm = document.getElementById("sign-in-form");
+    const userNameSpan = document.getElementById("user-name");
+    const signOutBtn = document.getElementById("sign-out-btn");
+    const signInBtn = document.getElementById("sign-in-btn");
+    const signUpBtn = document.getElementById("sign-up-btn");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            userInfo.style.display = "block";
+            signInForm.style.display = "none";
+            userNameSpan.textContent = user.displayName || "User";
+        } else {
+            userInfo.style.display = "none";
+            signInForm.style.display = "block";
+        }
+    });
+
+    signInBtn.addEventListener("click", () => {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                console.log("Signed in:", userCredential.user);
+            })
+            .catch((error) => {
+                alert("Sign-in error: " + error.message);
+            });
+    });
+
+    signUpBtn.addEventListener("click", () => {
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                const name = prompt("Please enter your name:");
+                if (name) {
+                    updateProfile(user, { displayName: name })
+                        .then(() => console.log("Profile updated with name:", name))
+                        .catch((error) => console.error("Error updating profile:", error));
+                }
+            })
+            .catch((error) => {
+                alert("Sign-up error: " + error.message);
+            });
+    });
+
+    signOutBtn.addEventListener("click", () => {
+        signOut(auth)
+            .then(() => console.log("Signed out"))
+            .catch((error) => alert("Sign-out error: " + error.message));
+    });
 });
