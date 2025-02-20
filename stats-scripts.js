@@ -16,6 +16,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// Hugging Face API configuration with your token
+const HF_API_TOKEN = "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";
+const HF_API_URL = "https://api-inference.huggingface.co/models/distilgpt2";
+
 document.addEventListener("DOMContentLoaded", () => {
     const userStats = document.getElementById("user-stats");
     const notSignedIn = document.getElementById("not-signed-in");
@@ -31,10 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const ratingsTableBody = document.getElementById("ratings-table-body");
     const backBtn = document.getElementById("back-btn");
     const signInRedirect = document.getElementById("sign-in-redirect");
+    const chatMessages = document.getElementById("chat-messages");
+    const chatInput = document.getElementById("chat-input");
+    const chatSendBtn = document.getElementById("chat-send-btn");
 
-    // Debugging: Check if elements are found
-    console.log("Brief View Button:", briefViewBtn);
-    console.log("Detailed View Button:", detailedViewBtn);
+    let userRatings = [];
 
     async function loadUserStats(user) {
         if (!user) return;
@@ -42,24 +47,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const userName = user.displayName || "User";
         userNameSpan.textContent = userName;
 
-        // Query Firestore for user's beer ratings
         const q = query(collection(db, "beerRatings"), where("name", "==", userName));
         try {
             const querySnapshot = await getDocs(q);
-            const ratings = querySnapshot.docs.map(doc => doc.data());
+            userRatings = querySnapshot.docs.map(doc => doc.data());
 
             // Brief stats
-            const total = ratings.length;
-            const avg = ratings.length > 0 ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1) : 0;
+            const total = userRatings.length;
+            const avg = total > 0 ? (userRatings.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1) : 0;
             const beerCounts = {};
-            ratings.forEach(r => beerCounts[r.beerBrand] = (beerCounts[r.beerBrand] || 0) + 1);
+            userRatings.forEach(r => beerCounts[r.beerBrand] = (beerCounts[r.beerBrand] || 0) + 1);
             const favoriteBeerName = Object.keys(beerCounts).length > 0
                 ? Object.keys(beerCounts).reduce((a, b) => beerCounts[a] > beerCounts[b] ? a : b)
                 : "None yet";
             const locationCounts = {};
-            ratings.forEach(r => locationCounts[r.location] = (locationCounts[r.location] || 0) + 1);
+            userRatings.forEach(r => locationCounts[r.location] = (locationCounts[r.location] || 0) + 1);
             const favoriteLocationName = Object.keys(locationCounts).length > 0
-                ? Object.keys(locationCounts).reduce((a, b) => locationCounts[a] > locationCounts[b] ? a : b)
+                ? Object.keys(locationCounts).reduce((a, b) => locationCounts[a] > beerCounts[b] ? a : b)
                 : "None yet";
 
             totalBeers.textContent = total;
@@ -69,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Detailed stats table
             ratingsTableBody.innerHTML = "";
-            ratings.forEach(rating => {
+            userRatings.forEach(rating => {
                 const tr = document.createElement("tr");
                 const date = rating.timestamp ? new Date(rating.timestamp.toMillis()).toLocaleDateString() : "Unknown";
                 tr.innerHTML = `
@@ -89,9 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Toggle view functions
     function showBriefStats() {
-        console.log("Showing Brief Stats"); // Debug
         briefStats.style.display = "block";
         detailedStats.style.display = "none";
         briefViewBtn.classList.add("active");
@@ -99,43 +101,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showDetailedStats() {
-        console.log("Showing Detailed Stats"); // Debug
         briefStats.style.display = "none";
         detailedStats.style.display = "block";
         briefViewBtn.classList.remove("active");
         detailedViewBtn.classList.add("active");
     }
 
-    // Ensure buttons exist before adding listeners
-    if (briefViewBtn && detailedViewBtn) {
-        briefViewBtn.addEventListener("click", () => {
-            console.log("Brief View Clicked"); // Debug
-            showBriefStats();
-        });
-        detailedViewBtn.addEventListener("click", () => {
-            console.log("Detailed View Clicked"); // Debug
-            showDetailedStats();
-        });
-    } else {
-        console.error("Toggle buttons not found in DOM");
+    briefViewBtn.addEventListener("click", showBriefStats);
+    detailedViewBtn.addEventListener("click", showDetailedStats);
+
+    async function sendChatMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // Display user message
+        const userMsg = document.createElement("p");
+        userMsg.textContent = `You: ${message}`;
+        chatMessages.appendChild(userMsg);
+        chatInput.value = "";
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Prepare context from user's ratings
+        const context = userRatings.map(r =>
+            `Date: ${r.timestamp ? new Date(r.timestamp.toMillis()).toLocaleDateString() : "Unknown"}, Beer: ${r.beerBrand}, Rating: ${r.rating}, Location: ${r.location}`
+        ).join("\n");
+
+        // Call Hugging Face Inference API
+        try {
+            const response = await fetch(HF_API_URL, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${HF_API_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    inputs: `User's beer ratings:\n${context}\n\nUser asked: ${message}\nAI response:`,
+                    parameters: { max_length: 100, temperature: 0.7 }
+                })
+            });
+
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+            const data = await response.json();
+            const aiResponse = data[0]?.generated_text.split("AI response:")[1]?.trim() || "I couldn’t generate a response right now.";
+
+            // Display AI response
+            const aiMsg = document.createElement("p");
+            aiMsg.textContent = `AI: ${aiResponse}`;
+            chatMessages.appendChild(aiMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } catch (error) {
+            console.error("Error with Hugging Face API:", error);
+            const errorMsg = document.createElement("p");
+            errorMsg.textContent = `AI: Sorry, something went wrong. Try again later.`;
+            chatMessages.appendChild(errorMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
     }
+
+    chatSendBtn.addEventListener("click", sendChatMessage);
+    chatInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendChatMessage();
+    });
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            loadUserStats(user).then(() => {
-                showBriefStats(); // Default to brief view after data loads
-            });
+            loadUserStats(user).then(showBriefStats);
         } else {
             userStats.style.display = "none";
             notSignedIn.style.display = "block";
         }
     });
 
-    backBtn.addEventListener("click", () => {
-        window.location.href = "index.html";
-    });
-
-    signInRedirect.addEventListener("click", () => {
-        window.location.href = "index.html";
-    });
+    backBtn.addEventListener("click", () => window.location.href = "index.html");
+    signInRedirect.addEventListener("click", () => window.location.href = "index.html");
 });
