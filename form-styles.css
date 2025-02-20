@@ -123,26 +123,27 @@ button {
 }
 
     #rating-buttons button {
-        background-color: #f0f0f0;
-        border: 2px solid #FFD700;
+        background-color: #f0f0f0; /* Light gray background */
+        border: 2px solid #FFD700; /* Golden border */
         border-radius: 5px;
-        width: 35px; /* Fixed width for square shape */
-        height: 35px; /* Fixed height for square shape */
-        padding: 0; /* Remove padding to fit number */
-        font-size: 1rem;
-        line-height: 35px; /* Center text vertically */
+        width: 40px; /* Slightly bigger than 35px */
+        height: 40px; /* Slightly bigger than 35px */
+        padding: 0; /* No padding to fit number */
+        font-size: 1.1rem; /* Slightly larger text */
+        line-height: 40px; /* Center text vertically */
+        color: #333; /* Dark gray numbers for contrast on light background */
         cursor: pointer;
-        transition: background-color 0.3s, transform 0.1s;
+        transition: background-color 0.3s, transform 0.1s, color 0.3s;
     }
 
         #rating-buttons button:hover {
-            background-color: #FFD700;
-            color: white;
+            background-color: #FFD700; /* Golden background on hover */
+            color: #fff; /* White numbers on hover for contrast */
         }
 
         #rating-buttons button.selected {
-            background-color: #FFD700;
-            color: white;
+            background-color: #FFD700; /* Golden background when selected */
+            color: #fff; /* White numbers when selected */
             transform: scale(1.1);
         }
 
