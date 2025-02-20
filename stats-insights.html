@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats & Insights - Brava</title>
+    <link rel="stylesheet" href="stats-styles.css">
+    <link rel="icon" href="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png">
+</head>
+<body>
+    <div class="logo">Brava 🍺</div>
+    <div id="stats-container">
+        <h1>Stats & Insights</h1>
+        <div id="user-stats" style="display: none;">
+            <p>Welcome, <span id="user-name"></span>! Here are your beer stats:</p>
+            <div class="stat-card">
+                <h2>Total Beers Rated</h2>
+                <p id="total-beers">0</p>
+            </div>
+            <div class="stat-card">
+                <h2>Average Rating</h2>
+                <p id="avg-rating">0.0</p>
+            </div>
+            <div class="stat-card">
+                <h2>Favorite Beer</h2>
+                <p id="favorite-beer">None yet</p>
+            </div>
+            <div class="stat-card">
+                <h2>Favorite Location</h2>
+                <p id="favorite-location">None yet</p>
+            </div>
+            <button id="back-btn">Back to Home</button>
+        </div>
+        <div id="not-signed-in">
+            <p>Please sign in to view your stats.</p>
+            <button id="sign-in-redirect">Sign In</button>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Brava Team. Built with 🍺 and care. <a href="https://github.com/madbildr/brava" target="_blank">GitHub Repo</a></p>
+    </footer>
+    <script type="module" src="stats-scripts.js"></script>
+</body>
+</html>
