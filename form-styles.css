@@ -109,23 +109,28 @@ button {
 
 #beer-emoji-display {
     font-size: 2rem;
-    min-height: 40px; /* Space for emojis */
+    min-height: 40px;
     margin-bottom: 10px;
 }
 
 #rating-buttons {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
+    gap: 5px; /* Space between buttons */
+    flex-wrap: nowrap; /* Force single row */
+    overflow-x: auto; /* Scroll if screen is too narrow */
+    white-space: nowrap; /* Prevent wrapping */
 }
 
     #rating-buttons button {
         background-color: #f0f0f0;
         border: 2px solid #FFD700;
         border-radius: 5px;
-        padding: 8px 12px;
+        width: 35px; /* Fixed width for square shape */
+        height: 35px; /* Fixed height for square shape */
+        padding: 0; /* Remove padding to fit number */
         font-size: 1rem;
+        line-height: 35px; /* Center text vertically */
         cursor: pointer;
         transition: background-color 0.3s, transform 0.1s;
     }
