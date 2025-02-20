@@ -190,12 +190,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const stars = document.querySelectorAll(".star-rating span");
     const selectedRating = document.getElementById("selected-rating");
+    const ratingInput = document.getElementById("rating");
+
     stars.forEach(star => {
         star.addEventListener("click", () => {
-            const value = star.getAttribute("data-value");
+            const value = parseInt(star.getAttribute("data-value"), 10);
             selectedRating.textContent = value;
-            document.getElementById("rating").value = value;
-            stars.forEach((s, index) => s.classList.toggle("selected", index < value));
+            ratingInput.value = value;
+
+            // Explicitly set selected class for stars up to the clicked value
+            stars.forEach((s, index) => {
+                if (index < value) {
+                    s.classList.add("selected");
+                } else {
+                    s.classList.remove("selected");
+                }
+            });
         });
     });
 });
