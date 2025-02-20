@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const successPopup = document.getElementById("success-popup");
 
     const beers = [
-        { name: "Heineken", logo: "heineken-logo.png" },
-        { name: "Guinness", logo: "assets/beer-logos/guinness.png" },
+        { name: "Heineken", logo: "beer-logos/heineken-logo.png" },
+        { name: "Guinness", logo: "beer-logos/guinness-logo.png" },
         { name: "Budweiser", logo: "assets/beer-logos/budweiser.png" },
         { name: "Corona", logo: "assets/beer-logos/corona.png" },
         { name: "Stella Artois", logo: "assets/beer-logos/stella-artois.png" },
