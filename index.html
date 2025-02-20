@@ -15,6 +15,18 @@
 </head>
 <body>
     <div class="logo">Brava 🍺</div>
+    <div id="auth-container">
+        <div id="user-info" style="display: none; text-align: center; margin: 10px;">
+            <span>Welcome, <span id="user-name"></span>!</span>
+            <button id="sign-out-btn">Sign Out</button>
+        </div>
+        <div id="sign-in-form" style="text-align: center; margin: 10px;">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button id="sign-in-btn">Sign In</button>
+            <button id="sign-up-btn">Sign Up</button>
+        </div>
+    </div>
     <div class="container">
         <div class="option" onclick="navigateTo('beer-form')">
             <img src="https://em-content.zobj.net/thumbs/120/apple/354/clinking-beer-mugs_1f37b.png" alt="Have a Pint">
@@ -25,7 +37,6 @@
             <span>Stats & Insights</span>
         </div>
     </div>
-    <!-- Football Facts Roulette -->
     <div class="facts-container">
         <div class="facts-roulette">
             <p>Did you know? The fastest goal in football history was scored in 2.8 seconds!</p>
@@ -38,6 +49,6 @@
     <footer>
         <p>© 2025 Brava Team. Built with 🍺 and care. <a href="https://github.com/madbildr/brava" target="_blank">GitHub Repo</a></p>
     </footer>
-    <script src="scripts.js"></script>
+    <script type="module" src="scripts.js"></script>
 </body>
 </html>

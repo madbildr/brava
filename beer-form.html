@@ -9,14 +9,11 @@
 <body>
     <div id="form-container">
         <form id="beer-form">
-            <!-- Step 1 -->
             <div class="step active">
                 <h2>Step 1: Your Name</h2>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                <input type="text" id="name" name="name" placeholder="Enter your name" disabled>
                 <button type="button" class="next-btn">➡️</button>
             </div>
-
-            <!-- Step 2 -->
             <div class="step">
                 <h2>Step 2: Beer Details</h2>
                 <div class="dropdown">
@@ -26,8 +23,6 @@
                 <button type="button" class="prev-btn">⬅️</button>
                 <button type="button" class="next-btn">➡️</button>
             </div>
-
-            <!-- Step 3 -->
             <div class="step">
                 <div class="star-rating">
                     <h2>Step 3: Rate the Beer</h2>
@@ -47,8 +42,6 @@
                     <button type="button" class="next-btn">➡️</button>
                 </div>
             </div>
-
-            <!-- Step 4 -->
             <div class="step">
                 <h2>Step 4: Location</h2>
                 <div id="map" style="height: 300px; width: 100%; margin-bottom: 10px;"></div>
@@ -58,10 +51,7 @@
             </div>
         </form>
     </div>
-
-    <!-- Load Google Maps API with libraries=places, following Google's recommended format -->
-    <script async
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=places&loading=async"></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmxQhI_0FnZxaLvyuVoQAZzO5iS-SFM4Y&libraries=places&loading=async"></script>
     <script type="module" src="form-scripts.js"></script>
 </body>
 </html>
