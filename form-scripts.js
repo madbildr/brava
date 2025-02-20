@@ -70,47 +70,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function initMap() {
-        if (mapInitialized || !google.maps) return;
+        if (mapInitialized || !window.google || !window.google.maps) {
+            console.error("Google Maps API not loaded yet");
+            return;
+        }
 
-        const map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 51.454514, lng: -2.587910 },
-            zoom: 8,
-        });
+        try {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: 51.454514, lng: -2.587910 },
+                zoom: 8,
+            });
 
-        const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
-        autocomplete.bindTo("bounds", map);
+            const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
+            autocomplete.bindTo("bounds", map);
 
-        const marker = new google.maps.Marker({
-            map,
-            position: null,
-        });
+            const marker = new google.maps.Marker({
+                map: map,
+                position: null,
+            });
 
-        autocomplete.addListener("place_changed", () => {
-            const place = autocomplete.getPlace();
-            if (!place.geometry) {
-                console.log("No details available for input: '" + place.name + "'");
-                return;
-            }
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    console.log("No details available for input: '" + place.name + "'");
+                    return;
+                }
 
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);
-            }
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);
+                }
 
-            marker.setPosition(place.geometry.location);
-        });
+                marker.setPosition(place.geometry.location);
+            });
 
-        mapInitialized = true;
+            mapInitialized = true;
+        } catch (error) {
+            console.error("Failed to initialize map:", error);
+            document.getElementById("map").innerHTML = "Error loading map. Please try again.";
+        }
     }
 
     function updateStep() {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === currentStep);
-            // Initialize map when reaching Step 4 (index 3)
-            if (index === 3 && index === currentStep) {
-                initMap();
+            if (index === 3 && index === currentStep && !mapInitialized) {
+                // Wait for Google Maps to load if not already loaded
+                if (window.google && window.google.maps) {
+                    initMap();
+                } else {
+                    const checkGoogleMaps = setInterval(() => {
+                        if (window.google && window.google.maps) {
+                            clearInterval(checkGoogleMaps);
+                            initMap();
+                        }
+                    }, 100);
+                }
             }
         });
     }
@@ -165,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Form submitted successfully!");
             document.getElementById("beer-form").reset();
             currentStep = 0;
+            mapInitialized = false; // Reset map for next use
             updateStep();
         } catch (error) {
             console.error("Error adding document: ", error);
