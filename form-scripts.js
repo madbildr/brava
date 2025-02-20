@@ -15,48 +15,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let map;
-let marker;
-let autocomplete;
-
-function initializeMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 51.454514, lng: -2.587910 },
-        zoom: 8,
-    });
-
-    autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
-    autocomplete.bindTo("bounds", map);
-
-    marker = new google.maps.Marker({
-        map,
-        position: null,
-    });
-
-    autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) {
-            console.log("No details available for input: '" + place.name + "'");
-            return;
-        }
-
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-        }
-
-        marker.setPosition(place.geometry.location);
-    });
-}
-
-// Expose initMap globally
-window.initMap = initializeMap;
-
 document.addEventListener("DOMContentLoaded", () => {
     const steps = document.querySelectorAll(".step");
     let currentStep = 0;
+    let mapInitialized = false;
 
     const beers = [
         { name: "Heineken", logo: "https://dutchkingsday.com/sponsor/heineken/heineken-logo-2023/" },
@@ -107,9 +69,49 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    function initMap() {
+        if (mapInitialized || !google.maps) return;
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 51.454514, lng: -2.587910 },
+            zoom: 8,
+        });
+
+        const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
+        autocomplete.bindTo("bounds", map);
+
+        const marker = new google.maps.Marker({
+            map,
+            position: null,
+        });
+
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+
+            marker.setPosition(place.geometry.location);
+        });
+
+        mapInitialized = true;
+    }
+
     function updateStep() {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === currentStep);
+            // Initialize map when reaching Step 4 (index 3)
+            if (index === 3 && index === currentStep) {
+                initMap();
+            }
         });
     }
 
