@@ -168,6 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
             currentStep = 0;
             mapInitialized = false;
             updateStep();
+            // Redirect to homepage after successful submission
+            window.location.href = "index.html";
         } catch (error) {
             console.error("Error adding document: ", error);
             alert("Failed to submit the form. Please try again.");
