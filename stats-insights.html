@@ -12,22 +12,41 @@
     <div id="stats-container">
         <h1>Stats & Insights</h1>
         <div id="user-stats" style="display: none;">
-            <p>Welcome, <span id="user-name"></span>! Here are your beer stats:</p>
-            <div class="stat-card">
-                <h2>Total Beers Rated</h2>
-                <p id="total-beers">0</p>
+            <p>Welcome, <span id="user-name"></span>! Here are your stats:</p>
+            <div class="view-toggle">
+                <button id="brief-view-btn" class="active">Brief Stats</button>
+                <button id="detailed-view-btn">In-Depth Data</button>
             </div>
-            <div class="stat-card">
-                <h2>Average Rating</h2>
-                <p id="avg-rating">0.0</p>
+            <div id="brief-stats" class="stats-view">
+                <div class="stat-card">
+                    <h2>Total Beers Rated</h2>
+                    <p id="total-beers">0</p>
+                </div>
+                <div class="stat-card">
+                    <h2>Average Rating</h2>
+                    <p id="avg-rating">0.0</p>
+                </div>
+                <div class="stat-card">
+                    <h2>Favorite Beer</h2>
+                    <p id="favorite-beer">None yet</p>
+                </div>
+                <div class="stat-card">
+                    <h2>Favorite Location</h2>
+                    <p id="favorite-location">None yet</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <h2>Favorite Beer</h2>
-                <p id="favorite-beer">None yet</p>
-            </div>
-            <div class="stat-card">
-                <h2>Favorite Location</h2>
-                <p id="favorite-location">None yet</p>
+            <div id="detailed-stats" class="stats-view" style="display: none;">
+                <table id="ratings-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Beer</th>
+                            <th>Rating</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratings-table-body"></tbody>
+                </table>
             </div>
             <button id="back-btn">Back to Home</button>
         </div>

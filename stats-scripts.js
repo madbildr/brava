@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const avgRating = document.getElementById("avg-rating");
     const favoriteBeer = document.getElementById("favorite-beer");
     const favoriteLocation = document.getElementById("favorite-location");
+    const briefViewBtn = document.getElementById("brief-view-btn");
+    const detailedViewBtn = document.getElementById("detailed-view-btn");
+    const briefStats = document.getElementById("brief-stats");
+    const detailedStats = document.getElementById("detailed-stats");
+    const ratingsTableBody = document.getElementById("ratings-table-body");
     const backBtn = document.getElementById("back-btn");
     const signInRedirect = document.getElementById("sign-in-redirect");
 
@@ -39,29 +44,38 @@ document.addEventListener("DOMContentLoaded", () => {
             const querySnapshot = await getDocs(q);
             const ratings = querySnapshot.docs.map(doc => doc.data());
 
-            // Calculate stats
+            // Brief stats
             const total = ratings.length;
             const avg = ratings.length > 0 ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1) : 0;
-
-            // Most frequent beer
             const beerCounts = {};
             ratings.forEach(r => beerCounts[r.beerBrand] = (beerCounts[r.beerBrand] || 0) + 1);
             const favoriteBeerName = Object.keys(beerCounts).length > 0
                 ? Object.keys(beerCounts).reduce((a, b) => beerCounts[a] > beerCounts[b] ? a : b)
                 : "None yet";
-
-            // Most frequent location
             const locationCounts = {};
             ratings.forEach(r => locationCounts[r.location] = (locationCounts[r.location] || 0) + 1);
             const favoriteLocationName = Object.keys(locationCounts).length > 0
                 ? Object.keys(locationCounts).reduce((a, b) => locationCounts[a] > locationCounts[b] ? a : b)
                 : "None yet";
 
-            // Update UI
             totalBeers.textContent = total;
             avgRating.textContent = avg;
             favoriteBeer.textContent = favoriteBeerName;
             favoriteLocation.textContent = favoriteLocationName;
+
+            // Detailed stats table
+            ratingsTableBody.innerHTML = "";
+            ratings.forEach(rating => {
+                const tr = document.createElement("tr");
+                const date = rating.timestamp ? new Date(rating.timestamp.toMillis()).toLocaleDateString() : "Unknown";
+                tr.innerHTML = `
+                    <td>${date}</td>
+                    <td>${rating.beerBrand}</td>
+                    <td>${rating.rating}</td>
+                    <td>${rating.location}</td>
+                `;
+                ratingsTableBody.appendChild(tr);
+            });
 
             userStats.style.display = "block";
             notSignedIn.style.display = "none";
@@ -71,9 +85,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Toggle views
+    function showBriefStats() {
+        briefStats.style.display = "block";
+        detailedStats.style.display = "none";
+        briefViewBtn.classList.add("active");
+        detailedViewBtn.classList.remove("active");
+    }
+
+    function showDetailedStats() {
+        briefStats.style.display = "none";
+        detailedStats.style.display = "block";
+        briefViewBtn.classList.remove("active");
+        detailedViewBtn.classList.add("active");
+    }
+
+    briefViewBtn.addEventListener("click", showBriefStats);
+    detailedViewBtn.addEventListener("click", showDetailedStats);
+
     onAuthStateChanged(auth, (user) => {
         if (user) {
             loadUserStats(user);
+            showBriefStats(); // Default to brief view
         } else {
             userStats.style.display = "none";
             notSignedIn.style.display = "block";
