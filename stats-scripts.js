@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const locationCounts = {};
             userRatings.forEach(r => locationCounts[r.location] = (locationCounts[r.location] || 0) + 1);
             const favoriteLocationName = Object.keys(locationCounts).length > 0
-                ? Object.keys(locationCounts).reduce((a, b) => locationCounts[a] > beerCounts[b] ? a : b)
+                ? Object.keys(locationCounts).reduce((a, b) => locationCounts[a] > locationCounts[b] ? a : b)
                 : "None yet";
 
             totalBeers.textContent = total;
@@ -111,22 +111,25 @@ document.addEventListener("DOMContentLoaded", () => {
     detailedViewBtn.addEventListener("click", showDetailedStats);
 
     async function sendChatMessage() {
+        // Safety check for chat elements
+        if (!chatInput || !chatMessages || !chatSendBtn) {
+            console.error("Chat elements not found:", { chatInput, chatMessages, chatSendBtn });
+            return;
+        }
+
         const message = chatInput.value.trim();
         if (!message) return;
 
-        // Display user message
         const userMsg = document.createElement("p");
         userMsg.textContent = `You: ${message}`;
         chatMessages.appendChild(userMsg);
         chatInput.value = "";
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Prepare context from user's ratings
         const context = userRatings.map(r =>
             `Date: ${r.timestamp ? new Date(r.timestamp.toMillis()).toLocaleDateString() : "Unknown"}, Beer: ${r.beerBrand}, Rating: ${r.rating}, Location: ${r.location}`
         ).join("\n");
 
-        // Call Hugging Face Inference API
         try {
             const response = await fetch(HF_API_URL, {
                 method: "POST",
@@ -145,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             const aiResponse = data[0]?.generated_text.split("AI response:")[1]?.trim() || "I couldn’t generate a response right now.";
 
-            // Display AI response
             const aiMsg = document.createElement("p");
             aiMsg.textContent = `AI: ${aiResponse}`;
             chatMessages.appendChild(aiMsg);
@@ -159,10 +161,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    chatSendBtn.addEventListener("click", sendChatMessage);
-    chatInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendChatMessage();
-    });
+    // Safe event listener attachment
+    if (chatSendBtn) {
+        chatSendBtn.addEventListener("click", sendChatMessage);
+    } else {
+        console.error("chatSendBtn not found in DOM");
+    }
+    if (chatInput) {
+        chatInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") sendChatMessage();
+        });
+    } else {
+        console.error("chatInput not found in DOM");
+    }
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
