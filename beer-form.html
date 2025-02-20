@@ -12,7 +12,9 @@
             <div class="step active">
                 <h2>Step 1: Your Name</h2>
                 <input type="text" id="name" name="name" placeholder="Enter your name" disabled>
-                <button type="button" class="next-btn">➡️</button>
+                <div class="nav-buttons">
+                    <button type="button" class="next-btn">➡️</button>
+                </div>
             </div>
             <div class="step">
                 <h2>Step 2: Beer Details</h2>
@@ -20,13 +22,15 @@
                     <input type="text" id="beer-brand" class="dropbtn" placeholder="Search for a beer..." autocomplete="off">
                     <div id="beerDropdown" class="dropdown-content"></div>
                 </div>
-                <button type="button" class="prev-btn">⬅️</button>
-                <button type="button" class="next-btn">➡️</button>
+                <div class="nav-buttons">
+                    <button type="button" class="prev-btn">⬅️</button>
+                    <button type="button" class="next-btn">➡️</button>
+                </div>
             </div>
             <div class="step">
                 <div class="beer-rating">
                     <h2>Step 3: Rate the Beer</h2>
-                    <div id="beer-emoji-display"></div> <!-- Display for beer emojis -->
+                    <div id="beer-emoji-display"></div>
                     <div id="rating-buttons">
                         <button type="button" data-value="1">1</button>
                         <button type="button" data-value="2">2</button>
@@ -41,16 +45,20 @@
                     </div>
                     <p>Rating: <span id="selected-rating">0</span>/10</p>
                     <input type="hidden" id="rating" name="rating" value="0">
-                    <button type="button" class="prev-btn">⬅️</button>
-                    <button type="button" class="next-btn">➡️</button>
+                    <div class="nav-buttons">
+                        <button type="button" class="prev-btn">⬅️</button>
+                        <button type="button" class="next-btn">➡️</button>
+                    </div>
                 </div>
             </div>
             <div class="step">
                 <h2>Step 4: Location</h2>
                 <div id="map" style="height: 300px; width: 100%; margin-bottom: 10px;"></div>
                 <input type="text" id="location" name="location" placeholder="Enter location">
-                <button type="button" class="prev-btn">⬅️</button>
-                <button type="submit">🍺</button>
+                <div class="nav-buttons">
+                    <button type="button" class="prev-btn">⬅️</button>
+                    <button type="submit" class="submit-btn">🍺</button>
+                </div>
             </div>
         </form>
     </div>

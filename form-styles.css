@@ -46,7 +46,7 @@
         width: 30px;
         height: 30px;
         margin-right: 10px;
-        border-radius: 50%;
+        border-radius: 50%; /* Optional: circular logos */
     }
 
 .show {
@@ -76,15 +76,15 @@
     border: 2px solid red;
 }
 
+/* General button styles */
 button {
     background-color: gold;
     color: white;
-    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
     font-size: 1.5rem;
+    transition: background-color 0.3s;
 }
 
     button:hover {
@@ -96,12 +96,24 @@ button {
         cursor: not-allowed;
     }
 
-#map {
-    height: 300px;
-    width: 100%;
-    margin-bottom: 10px;
+/* Navigation buttons container */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between; /* Left and right alignment */
+    max-width: 300px; /* Match input width */
+    margin: 20px auto; /* Center the container */
+    gap: 10px; /* Space between buttons */
 }
 
+.prev-btn, .next-btn, .submit-btn {
+    width: 50px; /* Smaller, fixed width */
+    height: 50px; /* Square shape */
+    padding: 0; /* Remove padding */
+    line-height: 50px; /* Center emoji/text */
+    font-size: 1.5rem;
+}
+
+/* Beer rating styles */
 .beer-rating {
     text-align: center;
     margin: 20px 0;
@@ -147,13 +159,21 @@ button {
             transform: scale(1.1);
         }
 
-.step input,
-.step button {
+/* Map styles */
+#map {
+    height: 300px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Step-specific input styles */
+.step input {
     display: block;
     margin: 10px auto;
     width: 80%;
     max-width: 300px;
     font-size: 16px;
+    padding: 10px;
 }
 
 input {
@@ -161,23 +181,7 @@ input {
     padding: 10px;
 }
 
-@media (max-width: 600px) {
-    #form-container {
-        padding: 10px;
-    }
-
-    button {
-        padding: 8px 16px;
-        font-size: 1.2rem;
-    }
-
-    
-
-    .step input,
-    .step button {
-        width: 90%;
-    }
-}
+/* Success popup styles */
 .success-popup {
     display: none;
     position: fixed;
@@ -218,9 +222,31 @@ input {
         transform: translate(-50%, -60%);
     }
 }
-.dropdown-content img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    border-radius: 50%; /* Optional: circular logos */
+
+/* Media queries */
+@media (max-width: 600px) {
+    #form-container {
+        padding: 10px;
+    }
+
+    button {
+        font-size: 1.2rem;
+    }
+
+    .step input,
+    .nav-buttons {
+        width: 90%;
+    }
+
+    #rating-buttons button {
+        width: 35px; /* Slightly smaller on mobile */
+        height: 35px;
+        line-height: 35px;
+    }
+
+    .prev-btn, .next-btn, .submit-btn {
+        width: 45px; /* Slightly smaller on mobile */
+        height: 45px;
+        line-height: 45px;
+    }
 }
