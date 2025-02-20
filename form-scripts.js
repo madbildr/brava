@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentStep = 0;
     let mapInitialized = false;
     const nameInput = document.getElementById("name");
+    const successPopup = document.getElementById("success-popup");
 
     const beers = [
         { name: "Heineken", logo: "https://dutchkingsday.com/sponsor/heineken/heineken-logo-2023/" },
@@ -36,11 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const beerInput = document.getElementById("beer-brand");
     const dropdownList = document.getElementById("beerDropdown");
 
-    // Check authentication state and autofill name
     onAuthStateChanged(auth, (user) => {
         if (user) {
             nameInput.value = user.displayName || "User";
-            nameInput.disabled = true; // Prevent editing if signed in
+            nameInput.disabled = true;
         } else {
             nameInput.value = "";
             nameInput.disabled = false;
@@ -163,16 +163,20 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         try {
             await addDoc(collection(db, "beerRatings"), formData);
-            alert("Form submitted successfully!");
+            // Show success popup
+            successPopup.style.display = "block";
             document.getElementById("beer-form").reset();
             currentStep = 0;
             mapInitialized = false;
             updateStep();
-            // Redirect to homepage after successful submission
-            window.location.href = "index.html";
+            // Redirect after 2 seconds (matches animation duration)
+            setTimeout(() => {
+                successPopup.style.display = "none";
+                window.location.href = "index.html";
+            }, 2000);
         } catch (error) {
             console.error("Error adding document: ", error);
-            alert("Failed to submit the form. Please try again.");
+            alert("Failed to submit the form. Please try again."); // Keep alert for errors
         }
     });
 
