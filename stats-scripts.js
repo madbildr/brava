@@ -32,6 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const backBtn = document.getElementById("back-btn");
     const signInRedirect = document.getElementById("sign-in-redirect");
 
+    // Debugging: Check if elements are found
+    console.log("Brief View Button:", briefViewBtn);
+    console.log("Detailed View Button:", detailedViewBtn);
+
     async function loadUserStats(user) {
         if (!user) return;
 
@@ -85,8 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Toggle views
+    // Toggle view functions
     function showBriefStats() {
+        console.log("Showing Brief Stats"); // Debug
         briefStats.style.display = "block";
         detailedStats.style.display = "none";
         briefViewBtn.classList.add("active");
@@ -94,19 +99,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showDetailedStats() {
+        console.log("Showing Detailed Stats"); // Debug
         briefStats.style.display = "none";
         detailedStats.style.display = "block";
         briefViewBtn.classList.remove("active");
         detailedViewBtn.classList.add("active");
     }
 
-    briefViewBtn.addEventListener("click", showBriefStats);
-    detailedViewBtn.addEventListener("click", showDetailedStats);
+    // Ensure buttons exist before adding listeners
+    if (briefViewBtn && detailedViewBtn) {
+        briefViewBtn.addEventListener("click", () => {
+            console.log("Brief View Clicked"); // Debug
+            showBriefStats();
+        });
+        detailedViewBtn.addEventListener("click", () => {
+            console.log("Detailed View Clicked"); // Debug
+            showDetailedStats();
+        });
+    } else {
+        console.error("Toggle buttons not found in DOM");
+    }
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            loadUserStats(user);
-            showBriefStats(); // Default to brief view
+            loadUserStats(user).then(() => {
+                showBriefStats(); // Default to brief view after data loads
+            });
         } else {
             userStats.style.display = "none";
             notSignedIn.style.display = "block";
