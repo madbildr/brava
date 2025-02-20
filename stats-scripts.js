@@ -52,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const querySnapshot = await getDocs(q);
             userRatings = querySnapshot.docs.map(doc => doc.data());
 
-            // Brief stats
             const total = userRatings.length;
             const avg = total > 0 ? (userRatings.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1) : 0;
             const beerCounts = {};
@@ -71,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
             favoriteBeer.textContent = favoriteBeerName;
             favoriteLocation.textContent = favoriteLocationName;
 
-            // Detailed stats table
             ratingsTableBody.innerHTML = "";
             userRatings.forEach(rating => {
                 const tr = document.createElement("tr");
@@ -111,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     detailedViewBtn.addEventListener("click", showDetailedStats);
 
     async function sendChatMessage() {
-        // Safety check for chat elements
         if (!chatInput || !chatMessages || !chatSendBtn) {
             console.error("Chat elements not found:", { chatInput, chatMessages, chatSendBtn });
             return;
@@ -126,9 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
         chatInput.value = "";
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
+        // Improved prompt with explicit instruction
         const context = userRatings.map(r =>
-            `Date: ${r.timestamp ? new Date(r.timestamp.toMillis()).toLocaleDateString() : "Unknown"}, Beer: ${r.beerBrand}, Rating: ${r.rating}, Location: ${r.location}`
-        ).join("\n");
+            `${r.beerBrand}: Rated ${r.rating}/10 on ${r.timestamp ? new Date(r.timestamp.toMillis()).toLocaleDateString() : "Unknown"} at ${r.location}`
+        ).join("; ");
+        const prompt = `You are an AI analyzing beer ratings. Here’s the user’s data: ${context}. The user asked: "${message}". Provide a concise, relevant response based on this data.`;
 
         try {
             const response = await fetch(HF_API_URL, {
@@ -138,15 +137,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    inputs: `User's beer ratings:\n${context}\n\nUser asked: ${message}\nAI response:`,
-                    parameters: { max_length: 100, temperature: 0.7 }
+                    inputs: prompt,
+                    parameters: { max_length: 150, temperature: 0.7, top_p: 0.9 }
                 })
             });
 
             if (!response.ok) throw new Error(`API error: ${response.status}`);
 
             const data = await response.json();
-            const aiResponse = data[0]?.generated_text.split("AI response:")[1]?.trim() || "I couldn’t generate a response right now.";
+            console.log("Raw API response:", data); // Debug
+            const aiResponse = data[0]?.generated_text?.replace(prompt, "").trim() || "I couldn’t come up with a good answer.";
 
             const aiMsg = document.createElement("p");
             aiMsg.textContent = `AI: ${aiResponse}`;
@@ -155,13 +155,12 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error with Hugging Face API:", error);
             const errorMsg = document.createElement("p");
-            errorMsg.textContent = `AI: Sorry, something went wrong. Try again later.`;
+            errorMsg.textContent = `AI: Oops, I hit a snag. Try again?`;
             chatMessages.appendChild(errorMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     }
 
-    // Safe event listener attachment
     if (chatSendBtn) {
         chatSendBtn.addEventListener("click", sendChatMessage);
     } else {
