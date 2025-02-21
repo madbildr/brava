@@ -19,11 +19,46 @@ const auth = getAuth(app);
 const functions = getFunctions(app);
 
 let currentUser = null;
+let mapInitialized = false;
+
+// Make initMap global
+window.initMap = function () {
+    if (mapInitialized || !window.google || !window.google.maps) {
+        console.error("Google Maps API not fully loaded or already initialized");
+        return;
+    }
+    try {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 51.454514, lng: -2.587910 },
+            zoom: 8,
+        });
+        const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
+        autocomplete.bindTo("bounds", map);
+        const marker = new google.maps.Marker({ map, position: null });
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);
+            }
+            marker.setPosition(place.geometry.location);
+        });
+        mapInitialized = true;
+    } catch (error) {
+        console.error("Failed to initialize map:", error);
+        document.getElementById("map").innerHTML = "Error loading map.";
+    }
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     const steps = document.querySelectorAll(".step");
     let currentStep = 0;
-    let mapInitialized = false;
     const nameInput = document.getElementById("name");
     const successPopup = document.getElementById("success-popup");
 
@@ -54,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownList = document.getElementById("beerDropdown");
 
     onAuthStateChanged(auth, (user) => {
-        currentUser = user; // Store current user
+        currentUser = user;
         console.log("Auth state changed:", user ? "Signed in" : "Signed out");
         if (user) {
             nameInput.value = user.displayName || "User";
@@ -91,59 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const initializeMap = httpsCallable(functions, "initializeMap");
-    function initMap() {
-        if (mapInitialized || !window.google || !window.google.maps) {
-            console.error("Google Maps API not fully loaded yet");
-            return;
-        }
-        try {
-            const map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 51.454514, lng: -2.587910 },
-                zoom: 8,
-            });
-            const autocomplete = new google.maps.places.Autocomplete(document.getElementById("location"));
-            autocomplete.bindTo("bounds", map);
-            const marker = new google.maps.Marker({ map, position: null });
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) {
-                    console.log("No details available for input: '" + place.name + "'");
-                    return;
-                }
-                if (place.geometry.viewport) {
-                    map.fitBounds(place.geometry.viewport);
-                } else {
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(17);
-                }
-                marker.setPosition(place.geometry.location);
-            });
-            mapInitialized = true;
-        } catch (error) {
-            console.error("Failed to initialize map:", error);
-            document.getElementById("map").innerHTML = "Error loading map.";
-        }
-    }
-
-    function loadGoogleMapsScript(apiKey) {
-        const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        document.head.appendChild(script);
-    }
-
+    const initializeMapFunc = httpsCallable(functions, "initializeMap");
     function updateStep() {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === currentStep);
             if (index === 3 && index === currentStep && !mapInitialized) {
                 if (currentUser) {
-                    console.log("User signed in, initializing map...");
-                    initializeMap().then(result => {
+                    console.log("User signed in, fetching API key...");
+                    initializeMapFunc().then(result => {
+                        console.log("API key received:", result.data.apiKey);
                         loadGoogleMapsScript(result.data.apiKey);
                     }).catch(error => {
-                        console.error("Error initializing map:", error);
+                        console.error("Error fetching API key:", error);
                         document.getElementById("map").innerHTML = "Please sign in to load the map.";
                     });
                 } else {
@@ -152,6 +146,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
+    }
+
+    function loadGoogleMapsScript(apiKey) {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => console.log("Google Maps script loaded");
+        script.onerror = () => console.error("Error loading Google Maps script");
+        document.head.appendChild(script);
     }
 
     function nextStep() {
