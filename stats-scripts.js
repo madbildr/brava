@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     detailedViewBtn.addEventListener("click", showDetailedStats);
 
     const chatWithInsights = httpsCallable(functions, "chatWithInsights");
-    const chatWithInsights = httpsCallable(functions, "chatWithInsights");
+    
     async function sendChatMessage() {
         if (!chatInput || !chatMessages || !chatSendBtn) {
             console.error("Chat elements not found:", { chatInput, chatMessages, chatSendBtn });
