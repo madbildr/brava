@@ -127,8 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
         chatInput.value = "";
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
+        console.log("Sending to chatWithInsights:", { message, ratings: userRatings }); // Debug data
         try {
             const result = await chatWithInsights({ message, ratings: userRatings });
+            console.log("Chat response:", result); // Debug response
             const aiResponse = result.data.response;
 
             const aiMsg = document.createElement("p");

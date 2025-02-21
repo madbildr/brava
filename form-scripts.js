@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("User signed in, fetching API key...");
                     initializeMapFunc()
                         .then(result => {
-                            console.log("API key received:", result.data.apiKey);
+                            console.log("ncie try ;)");
                             loadGoogleMapsScript(result.data.apiKey);
                         })
                         .catch(error => {
