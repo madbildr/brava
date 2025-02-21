@@ -18,6 +18,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const functions = getFunctions(app);
 
+let currentUser = null;
+
 document.addEventListener("DOMContentLoaded", () => {
     const steps = document.querySelectorAll(".step");
     let currentStep = 0;
@@ -52,6 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownList = document.getElementById("beerDropdown");
 
     onAuthStateChanged(auth, (user) => {
+        currentUser = user; // Store current user
+        console.log("Auth state changed:", user ? "Signed in" : "Signed out");
         if (user) {
             nameInput.value = user.displayName || "User";
             nameInput.disabled = true;
@@ -134,12 +138,18 @@ document.addEventListener("DOMContentLoaded", () => {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === currentStep);
             if (index === 3 && index === currentStep && !mapInitialized) {
-                initializeMap().then(result => {
-                    loadGoogleMapsScript(result.data.apiKey);
-                }).catch(error => {
-                    console.error("Error initializing map:", error);
-                    document.getElementById("map").innerHTML = "Error loading map.";
-                });
+                if (currentUser) {
+                    console.log("User signed in, initializing map...");
+                    initializeMap().then(result => {
+                        loadGoogleMapsScript(result.data.apiKey);
+                    }).catch(error => {
+                        console.error("Error initializing map:", error);
+                        document.getElementById("map").innerHTML = "Please sign in to load the map.";
+                    });
+                } else {
+                    console.log("No user signed in, skipping map load.");
+                    document.getElementById("map").innerHTML = "Please sign in to load the map.";
+                }
             }
         });
     }
