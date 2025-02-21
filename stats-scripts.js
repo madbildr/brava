@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-functions.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
@@ -15,10 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
-// Hugging Face API configuration with your token
-const HF_API_TOKEN = "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";
-const HF_API_URL = "https://api-inference.huggingface.co/models/distilgpt2";
+const functions = getFunctions(app);
 
 document.addEventListener("DOMContentLoaded", () => {
     const userStats = document.getElementById("user-stats");
@@ -50,7 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const q = query(collection(db, "beerRatings"), where("name", "==", userName));
         try {
             const querySnapshot = await getDocs(q);
-            userRatings = querySnapshot.docs.map(doc => doc.data());
+            userRatings = querySnapshot.docs.map(doc => ({
+                timestamp: doc.data().timestamp?.toMillis(),
+                beerBrand: doc.data().beerBrand,
+                rating: doc.data().rating,
+                location: doc.data().location
+            }));
 
             const total = userRatings.length;
             const avg = total > 0 ? (userRatings.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1) : 0;
@@ -73,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ratingsTableBody.innerHTML = "";
             userRatings.forEach(rating => {
                 const tr = document.createElement("tr");
-                const date = rating.timestamp ? new Date(rating.timestamp.toMillis()).toLocaleDateString() : "Unknown";
+                const date = rating.timestamp ? new Date(rating.timestamp).toLocaleDateString() : "Unknown";
                 tr.innerHTML = `
                     <td>${date}</td>
                     <td>${rating.beerBrand}</td>
@@ -108,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     briefViewBtn.addEventListener("click", showBriefStats);
     detailedViewBtn.addEventListener("click", showDetailedStats);
 
+    const chatWithInsights = httpsCallable(functions, "chatWithInsights");
     async function sendChatMessage() {
         if (!chatInput || !chatMessages || !chatSendBtn) {
             console.error("Chat elements not found:", { chatInput, chatMessages, chatSendBtn });
@@ -123,39 +127,18 @@ document.addEventListener("DOMContentLoaded", () => {
         chatInput.value = "";
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // Improved prompt with explicit instruction
-        const context = userRatings.map(r =>
-            `${r.beerBrand}: Rated ${r.rating}/10 on ${r.timestamp ? new Date(r.timestamp.toMillis()).toLocaleDateString() : "Unknown"} at ${r.location}`
-        ).join("; ");
-        const prompt = `You are an AI analyzing beer ratings. Here’s the user’s data: ${context}. The user asked: "${message}". Provide a concise, relevant response based on this data.`;
-
         try {
-            const response = await fetch(HF_API_URL, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${HF_API_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    inputs: prompt,
-                    parameters: { max_length: 150, temperature: 0.7, top_p: 0.9 }
-                })
-            });
-
-            if (!response.ok) throw new Error(`API error: ${response.status}`);
-
-            const data = await response.json();
-            console.log("Raw API response:", data); // Debug
-            const aiResponse = data[0]?.generated_text?.replace(prompt, "").trim() || "I couldn’t come up with a good answer.";
+            const result = await chatWithInsights({ message, ratings: userRatings });
+            const aiResponse = result.data.response;
 
             const aiMsg = document.createElement("p");
             aiMsg.textContent = `AI: ${aiResponse}`;
             chatMessages.appendChild(aiMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } catch (error) {
-            console.error("Error with Hugging Face API:", error);
+            console.error("Error calling chat function:", error);
             const errorMsg = document.createElement("p");
-            errorMsg.textContent = `AI: Oops, I hit a snag. Try again?`;
+            errorMsg.textContent = `AI: Sorry, something went wrong. Try again later.`;
             chatMessages.appendChild(errorMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }

@@ -1,6 +1,7 @@
 ﻿import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-functions.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCEL4hFepEBcCJ9MpTiHeDWZYYdiH3qol4",
@@ -15,6 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const functions = getFunctions(app);
 
 document.addEventListener("DOMContentLoaded", () => {
     const steps = document.querySelectorAll(".step");
@@ -24,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const successPopup = document.getElementById("success-popup");
 
     const beers = [
-        { name: "Heineken", logo: "beer-logos/heineken-logo.png" },
-        { name: "Guinness", logo: "beer-logos/guinness-logo.png" },
+        { name: "Heineken", logo: "assets/beer-logos/heineken.png" },
+        { name: "Guinness", logo: "assets/beer-logos/guinness.png" },
         { name: "Budweiser", logo: "assets/beer-logos/budweiser.png" },
         { name: "Corona", logo: "assets/beer-logos/corona.png" },
         { name: "Stella Artois", logo: "assets/beer-logos/stella-artois.png" },
@@ -85,9 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    const initializeMap = httpsCallable(functions, "initializeMap");
     function initMap() {
         if (mapInitialized || !window.google || !window.google.maps) {
-            console.error("Google Maps API not loaded yet");
+            console.error("Google Maps API not fully loaded yet");
             return;
         }
         try {
@@ -119,20 +122,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function loadGoogleMapsScript(apiKey) {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+
     function updateStep() {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === currentStep);
             if (index === 3 && index === currentStep && !mapInitialized) {
-                if (window.google && window.google.maps) {
-                    initMap();
-                } else {
-                    const checkGoogleMaps = setInterval(() => {
-                        if (window.google && window.google.maps) {
-                            clearInterval(checkGoogleMaps);
-                            initMap();
-                        }
-                    }, 100);
-                }
+                initializeMap().then(result => {
+                    loadGoogleMapsScript(result.data.apiKey);
+                }).catch(error => {
+                    console.error("Error initializing map:", error);
+                    document.getElementById("map").innerHTML = "Error loading map.";
+                });
             }
         });
     }
@@ -177,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await addDoc(collection(db, "beerRatings"), formData);
             successPopup.style.display = "block";
             document.getElementById("beer-form").reset();
-            document.getElementById("beer-emoji-display").textContent = ""; // Reset emojis on submit
+            document.getElementById("beer-emoji-display").textContent = "";
             currentStep = 0;
             mapInitialized = false;
             updateStep();
@@ -191,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Beer rating button logic
     const ratingButtons = document.querySelectorAll("#rating-buttons button");
     const beerEmojiDisplay = document.getElementById("beer-emoji-display");
     const selectedRating = document.getElementById("selected-rating");
@@ -202,11 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const value = parseInt(button.getAttribute("data-value"), 10);
             selectedRating.textContent = value;
             ratingInput.value = value;
-
-            // Display beer emojis based on rating
             beerEmojiDisplay.textContent = "🍺".repeat(value);
-
-            // Highlight selected button
             ratingButtons.forEach(btn => btn.classList.remove("selected"));
             button.classList.add("selected");
         });
