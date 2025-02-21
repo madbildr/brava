@@ -112,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     detailedViewBtn.addEventListener("click", showDetailedStats);
 
     const chatWithInsights = httpsCallable(functions, "chatWithInsights");
+    const chatWithInsights = httpsCallable(functions, "chatWithInsights");
     async function sendChatMessage() {
         if (!chatInput || !chatMessages || !chatSendBtn) {
             console.error("Chat elements not found:", { chatInput, chatMessages, chatSendBtn });
@@ -127,10 +128,13 @@ document.addEventListener("DOMContentLoaded", () => {
         chatInput.value = "";
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        console.log("Sending to chatWithInsights:", { message, ratings: userRatings }); // Debug data
+        // Ensure ratings is an array, even if empty
+        const ratingsToSend = Array.isArray(userRatings) ? userRatings : [];
+        console.log("Sending to chatWithInsights:", { message, ratings: ratingsToSend });
+
         try {
-            const result = await chatWithInsights({ message, ratings: userRatings });
-            console.log("Chat response:", result); // Debug response
+            const result = await chatWithInsights({ message, ratings: ratingsToSend });
+            console.log("Chat response:", result);
             const aiResponse = result.data.response;
 
             const aiMsg = document.createElement("p");
